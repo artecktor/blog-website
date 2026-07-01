@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>صفحه مدیریت کاربران</title>
+</head>
+
+<body>
+
+<nav style="direction: ltr" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top p-4">
+    <div class="container px-4">
+        <a class="navbar-brand vazirBoldFont fs-4" href="http://localhost:8080/admin">
+            پنل مدیریت کتابستان
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarSupportedContent" class="navbar-collapse pt-4 mt-2 m-lg-0 p-lg-0 collapse rounded bg-dark">
+            <ul style="font-size: larger" class="navbar-nav ms-lg-auto mb-2 mb-lg-0 align-items-center text-center">
+                <li class="nav-item m-1">
+                    <a class="nav-link" href="http://localhost:8080/book-list">کتاب ها</a>
+                </li>
+                <li class="nav-item m-1">
+                    <a class="nav-link active" aria-current="page" href="http://localhost:8080">بازگشت به سایت</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container panel-header">
+    <div class="row align-items-center">
+        <div class="col-12 col-md-9">
+            <h1 class="vazirBoldFont">مدیریت کاربران</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table align-middle text-center table-hover">
+                <thead>
+                <tr>
+                    <th>نام کاربری</th>
+                    <th>پسورد</th>
+                    <th>ایمیل</th>
+                    <th>آدرس</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer class="py-4 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">
+            کتابفروشی برتر - تمام حقوق محفوظ است ©
+        </p>
+    </div>
+</footer>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const activeUserId = params.get("activeId");
+
+    function loadUsers() {
+        document.getElementById("table-body").innerHTML = "";
+        fetch("http://localhost:8080/users")
+            .then(res => res.json())
+            .then(users => {
+                for (let i = 0; i < users.length; i++) {
+                    convertToHTML(users[i]);
+                }
+                document.getElementById(`tr-user-${activeUserId}`).classList.add("table-active");
+            });
+    }
+
+    function convertToHTML(user) {
+        let row = `<tr id="tr-user-${user.id}">
+            <td class="p-4">${user.username}</td>
+            <td>${user.password}</td>
+            <td>${user.email}</td>
+            <td>${user.address}</td>
+            <td>
+                <button onclick="deleteUser(${user.id}, '${user.username}')" class="btn btn-sm btn-outline-danger">
+                    <i class="fa fa-trash"></i>
+                    حذف
+                </button>
+            </td>
+        </tr>`;
+        document.getElementById("table-body").innerHTML += row;
+    }
+
+    function deleteUser(userId, username) {
+        if (confirm("حذف کاربر «" + username + "» ؟")) {
+            fetch("http://localhost:8080/users/delete/" + userId)
+                .then(() => loadUsers());
+        }
+    }
+
+    loadUsers();
+</script>
+
+<script src="/bootstrap.bundle.min.js"></script>
+</body>
+</html>

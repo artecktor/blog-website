@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>افزودن کتاب جدید</title>
+</head>
+<body style="direction: rtl">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div style="max-width: 65%">
+
+            <div class="card border-0">
+                <div class="card-body p-5">
+                    <div style="direction: ltr" class="d-flex align-items-center justify-content-between mb-5">
+                        <a href="http://localhost:8080/admin/books" class="back-icon">
+                            <i class="fa fa-arrow-left"></i>
+                        </a>
+                        <h4 style="font-size: xx-large; color: #333333;"
+                            class="text-center vazirBoldFont m-0">
+                            افزودن کتاب جدید
+                        </h4>
+                        <span style="width:24px"></span>
+                    </div>
+
+                    <form action="http://localhost:8080/book/save" method="post">
+
+                        <div class="mb-5 floating-group">
+                            <input type="text" name="title" class="form-control form-btn p-3" placeholder="نام کتاب"
+                                   required>
+                            <label class="form-label">نام کتاب</label>
+                        </div>
+
+                        <div class="mb-5 floating-group">
+                            <input type="text" name="author" class="form-control form-btn p-3" placeholder="نویسنده"
+                                   required>
+                            <label class="form-label">نویسنده</label>
+                        </div>
+
+                        <div class="mb-5 floating-group">
+                            <input type="number" name="price" class="form-control form-btn p-3"
+                                   placeholder="قیمت (به تومان)"
+                                   required>
+                            <label class="form-label">قیمت (به تومان)</label>
+                        </div>
+
+                        <div class="mb-5 floating-group">
+                            <input type="text" name="imageAddress" class="form-control form-btn p-3"
+                                   placeholder="آدرس تصویر"
+                                   required>
+                            <label class="form-label">آدرس تصویر</label>
+                        </div>
+
+                        <div class="mb-5 floating-group">
+                            <textarea type="text" name="description" class="form-control form-btn p-3"
+                                      placeholder="توضیحات"
+                                      required></textarea>
+                            <label class="form-label">توضیحات</label>
+                        </div>
+
+                        <button style="border-radius: 30px; width: 100%; margin-top: 45px"
+                                class="btn btn-submit p-2 d-flex justify-content-center align-items-center"
+                                type="submit"><i class="fa fa-level-down btn-submit-arrow"></i>ذخیره کتاب
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+
+</body>
+</html>

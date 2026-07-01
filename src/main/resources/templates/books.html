@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>همه کتاب ها</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top p-4">
+    <div class="container px-4">
+        <a class="navbar-brand vazirBoldFont fs-4" href="http://localhost:8080">کتابفروشی
+            کتابستان</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div id="navbarSupportedContent" class="navbar-collapse pt-4 mt-2 m-lg-0 p-lg-0 collapse rounded bg-dark">
+            <ul style="font-size: larger" class="navbar-nav ms-lg-auto mb-2 mb-lg-0 align-items-center text-center">
+                <li class="nav-item me-lg-5  d-flex justify-content-lg-start justify-content-center">
+                    <a href="http://localhost:8080/login" style="text-decoration: none" class="cart-btn-3">عضویت |
+                        ورود</a>
+                </li>
+                <li class="nav-item m-1"><a class="nav-link" aria-current="page"
+                                            href="http://localhost:8080">خانه</a></li>
+                <li class="nav-item m-1"><a class="nav-link active" href="http://localhost:8080/book-list">کتاب ها</a></li>
+                <li class="nav-item m-1"><a class="nav-link" href="#">درباره ما</a></li>
+                <li class="nav-item m-1"><a class="nav-link" href="#">تماس با ما</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<h1 style="color: darkred" class="text-center py-5 vazirBoldFont">همه کتاب ها</h1>
+<section class="pb-5 border-bottom">
+    <div class="container px-5">
+        <div id="bookSection" class="row gx-4 gy-4 justify-content-center"></div>
+    </div>
+</section>
+
+<footer class="py-5 bg-dark">
+    <div class="container px-5"><p class="m-0 text-center text-white"> کتابفروشی برتر - تمام حقوق محفوظ است ©</p></div>
+</footer>
+
+<script>
+    function loadProducts() {
+        fetch("http://localhost:8080/books")
+            .then(res => res.json())
+            .then(books => {
+                for (let i = 0; i < books.length; i++) {
+                    convertToHTML(books[i]);
+                    getAverageRating(books[i]).then(data => {
+
+                        if(data.averageRating != null && !isNaN(data.averageRating)){
+                            document.getElementById(`rating-${books[i].id}`).innerText = data.averageRating.toLocaleString("fa-IR");
+                            document.getElementById(`index-${books[i].id}`).innerText = "(" + data.index.toLocaleString("fa-IR") + ")";
+                        }
+                        else {
+                            document.getElementById(`rating-${books[i].id}`).innerText = "(نظری ثبت نشده)";
+                        }
+
+                    });
+                }
+            })
+    }
+
+    function convertToHTML(book) {
+        let cart = `
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card text-center h-100 shadow border-0">
+                    <img class="card-img-top" src="${book.imageAddress}" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title vazirBoldFont">${book.title}</h5>
+                        <span id="index-${book.id}"></span>
+                        <span id="rating-${book.id}"></span>
+                        <span style="color:darkslategray" class="fa fa-star"></span>
+                        <p class="card-text">
+                            <span>تومان </span><span dir="ltr">${book.price.toLocaleString("fa-IR")}</span>
+                        </p>
+                        <a href="http://localhost:8080/book?id=${book.id}"
+                           class="btn cart-btn-2">مطالعه بیشتر</a>
+                    </div>
+                </div>
+            </div>
+        `
+        document.getElementById("bookSection").innerHTML += cart;
+    }
+
+    function getAverageRating(book) {
+        return fetch("http://localhost:8080/comments/book/" + book.id)
+            .then(res => res.json())
+            .then(comments => {
+                let rating = 0;
+                let index = 0;
+
+                for (let i = 0; i < comments.length; i++) {
+                    if (comments[i].accepted) {
+                        rating += comments[i].rating;
+                        index++;
+                    }
+                }
+                if (index === 0) {
+                    return 0;
+                } else {
+                    let averageRating = rating / index;
+                    return {averageRating, index};
+                }
+            });
+    }
+
+    loadProducts();
+</script>
+<script src="/bootstrap.bundle.min.js"></script>
+</body>
+</html>

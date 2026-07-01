@@ -1,0 +1,283 @@
+@font-face {
+    font-family: "Vazir";
+    src: url("/Vazir.ttf");
+}
+
+@font-face {
+    font-family: "Vazir-Bold";
+    src: url("/Vazir-Bold.ttf");
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 18px !important;
+    }
+}
+@media (max-width: 768px) {
+    #loginPageCard {
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 991px) {
+    #navbarSupportedContent {
+        background-color: #2c3034 !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .book-layout {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .book-layout .text-xl-start {
+        text-align: center !important;
+    }
+
+    .book-layout .justify-content-xl-start {
+        justify-content: center !important;
+    }
+}
+
+.star {
+    font-size: xx-large !important;
+    cursor: pointer !important;
+}
+
+.star:hover {
+    color: green !important;
+}
+
+.btn-submit-arrow {
+    margin-left: 7px;
+    transform: rotate(90deg);
+    transition: all 400ms ease;
+}
+
+.btn.btn-submit:hover .btn-submit-arrow {
+    transform: translateX(6px) rotate(90deg);
+}
+
+.form-control.form-btn {
+    background-color: #F7F7F7;
+    box-shadow: none;
+}
+
+.form-control.form-btn:hover, .form-control.form-btn:focus {
+    border-color: #082452;
+}
+
+.btn.btn-submit {
+    background: #333333;
+    font-size: large;
+    color: white;
+    transition: background-color 400ms ease;
+}
+
+.btn.btn-submit:hover {
+    background: #00AD5F;
+}
+
+.btn.btn-submit:active {
+    color: white;
+}
+
+.vazirFont {
+    font-family: "Vazir", sans-serif;
+}
+
+.vazirBoldFont {
+    font-family: "Vazir-Bold", sans-serif;
+}
+
+body {
+    font-family: "Vazir", sans-serif;
+    background-color: #F8F4EE;
+}
+
+.checked {
+    color: orange;
+}
+
+.cart-btn {
+    background: transparent;
+    border: 2px solid #2A9D8F;
+    color: #2A9D8F;
+    padding: 10px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.cart-btn-2 {
+    background: transparent;
+    border: 2px solid #082452;
+    color: #082452;
+    padding: 10px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.cart-btn-2:hover {
+    background: #082452;
+    color: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.cart-btn:hover {
+    background: #2A9D8F;
+    color: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+
+.table thead th {
+    height: 50px;
+    vertical-align: middle !important;
+    line-height: 1;
+}
+
+table tbody tr:hover {
+    background-color: #f2f2f2;
+}
+
+.comment {
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fafafa;
+    border-radius: 8px;
+}
+
+.floating-group {
+    position: relative;
+}
+
+.floating-group label {
+    position: absolute;
+    right: 10px;
+    top: 18px;
+    transition: all .25s ease;
+    color: #082452;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.floating-group input:focus + label,
+.floating-group input:not(:placeholder-shown) + label,
+.floating-group textarea:focus + label,
+.floating-group textarea:not(:placeholder-shown) + label {
+    opacity: 1;
+    transform: translateY(-215%);
+}
+
+.floating-group input:focus::placeholder,
+.floating-group textarea:focus::placeholder {
+    opacity: 0;
+}
+
+
+.back-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 200ms ease;
+    text-decoration: none;
+}
+
+.back-icon:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.back-icon:active {
+    background-color: rgba(0, 0, 0, 0.14);
+}
+
+.back-icon i {
+    color: black;
+    transition: color 200ms ease;
+}
+
+.back-icon:hover i {
+    color: #444;
+}
+
+.panel-header {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.table-card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .08);
+    padding: 20px;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.nav-link:hover {
+    color: #0088a9 !important;
+}
+
+.active {
+    color: #0088a9 !important;
+}
+
+.cart-btn-3 {
+    align-items: center;
+    background-clip: padding-box;
+    background-color: #fa6400;
+    border: 1px solid transparent;
+    border-radius: 2rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 16px;
+    font-weight: normal;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    position: relative;
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    width: auto;
+}
+
+.cart-btn-3:hover,
+.cart-btn-3:focus {
+    background-color: #fb8332;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.cart-btn-3:hover {
+    transform: translateY(-1px);
+}
+
+.cart-btn-3:active {
+    background-color: #c85000;
+    box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+    transform: translateY(0);
+}
+
+
+
+

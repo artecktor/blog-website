@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>ورود کاربر</title>
+</head>
+<body style="direction: rtl">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div id="loginPageCard" style="max-width: 65%">
+
+            <div class="card border-0">
+                <div class="card-body px-3 py-5 p-md-5">
+                    <div style="direction: ltr" class="d-flex align-items-center justify-content-between mb-5">
+                        <a href="http://localhost:8080" class="back-icon">
+                            <i class="fa fa-arrow-left"></i>
+                        </a>
+                        <h4 style="font-size: xx-large; color: #333333;"
+                            class="text-center vazirBoldFont m-0">
+                            ورود کاربر
+                        </h4>
+                        <span style="width:24px"></span>
+                    </div>
+
+                    <form action="http://localhost:8080/login" method="post">
+
+                        <div class="mb-5 floating-group">
+                            <input type="text" name="username" class="form-control form-btn p-3" placeholder="نام کاربر"
+                                   required>
+                            <label class="form-label">نام کاربر</label>
+                        </div>
+
+                        <div class="mb-5 floating-group">
+                            <input type="password"
+                                   name="password"
+                                   class="form-control form-btn p-3"
+                                   placeholder="پسورد"
+                                   required>
+                            <label class="form-label">پسورد</label>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <a href="http://localhost:8080/register">
+                                ثبت نام نکرده ام
+                            </a>
+                        </div>
+
+                        <button style="border-radius: 30px; width: 100%; margin-top: 45px"
+                                class="btn btn-submit p-2 d-flex justify-content-center align-items-center"
+                                type="submit"><i class="fa fa-level-down btn-submit-arrow"></i>ورود
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
