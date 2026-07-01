@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>ConnectToDatabase</artifactId>
+    <artifactId>blog-website</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ConnectToDatabase</name>
-    <description>ConnectToDatabase</description>
+    <name>blog-website</name>
+    <description>blog-website</description>
     <url/>
     <licenses>
         <license/>

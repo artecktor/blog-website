@@ -23,7 +23,7 @@
         <div id="navbarSupportedContent" class="navbar-collapse pt-4 mt-2 m-lg-0 p-lg-0 collapse rounded bg-dark">
             <ul style="font-size: larger" class="navbar-nav ms-lg-auto mb-2 mb-lg-0 align-items-center text-center">
                 <li class="nav-item m-1">
-                    <a class="nav-link" href="http://localhost:8080/book-list">کتاب ها</a>
+                    <a class="nav-link" href="http://localhost:8080/blog-list">کتاب ها</a>
                 </li>
                 <li class="nav-item m-1">
                     <a class="nav-link active" aria-current="page" href="http://localhost:8080">بازگشت به سایت</a>
@@ -39,7 +39,7 @@
             <h1 class="vazirBoldFont">مدیریت کتاب‌ها</h1>
         </div>
         <div class="col-12 col-md-3 text-md-start text-end">
-            <a href="http://localhost:8080/admin/book/save" class="btn cart-btn-2 w-100 w-md-auto">
+            <a href="http://localhost:8080/admin/blog/save" class="btn cart-btn-2 w-100 w-md-auto">
                 <i class="fa fa-plus"></i>
                 افزودن کتاب جدید
             </a>
@@ -87,25 +87,25 @@
                 for (let i = 0; i < books.length; i++) {
                     convertToHTML(books[i]);
                 }
-                document.getElementById(`tr-book-${activeBookId}`).classList.add("table-active");
+                document.getElementById(`tr-blog-${activeBookId}`).classList.add("table-active");
             });
     }
 
-    function convertToHTML(book) {
-        let row = `<tr id="tr-book-${book.id}">
+    function convertToHTML(blog) {
+        let row = `<tr id="tr-blog-${blog.id}">
             <td>
-                <img src="${book.imageAddress}"
+                <img src="${blog.imageAddress}"
                      style="width: 60px; height: 90px; object-fit: cover; border-radius: 5px;">
             </td>
-            <td>${book.title}</td>
-            <td>${book.author}</td>
-            <td><span dir="ltr">${book.price.toLocaleString("fa-IR")}</span><span> تومان</span></td>
+            <td>${blog.title}</td>
+            <td>${blog.author}</td>
+            <td><span dir="ltr">${blog.price.toLocaleString("fa-IR")}</span><span> تومان</span></td>
             <td>
-                <a href="http://localhost:8080/admin/book/update?id=${book.id}" class="btn btn-sm btn-outline-primary">
+                <a href="http://localhost:8080/admin/blog/update?id=${blog.id}" class="btn btn-sm btn-outline-primary">
                     <i class="fa fa-edit"></i>
                     ویرایش
                 </a>
-                <button onclick="deleteBook(${book.id}, '${book.title}')" class="btn btn-sm btn-outline-danger">
+                <button onclick="deleteBook(${blog.id}, '${blog.title}')" class="btn btn-sm btn-outline-danger">
                     <i class="fa fa-trash"></i>
                     حذف
                 </button>

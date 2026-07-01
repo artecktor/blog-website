@@ -26,7 +26,7 @@
                 <li class="nav-item m-1">
                     <a class="nav-link active" aria-current="page" href="http://localhost:8080">خانه</a>
                 </li>
-                <li class="nav-item m-1"><a class="nav-link" href="http://localhost:8080/book-list">کتاب ها</a></li>
+                <li class="nav-item m-1"><a class="nav-link" href="http://localhost:8080/blog-list">کتاب ها</a></li>
                 <li class="nav-item m-1"><a class="nav-link" href="#">درباره ما</a></li>
                 <li class="nav-item m-1"><a class="nav-link" href="#">تماس با ما</a></li>
             </ul>
@@ -37,7 +37,7 @@
 <div class="container my-4 my-md-5">
     <header class="py-3 py-md-5">
         <div class="container" style="max-width: 1100px;">
-            <div class="row gx-4 align-items-center justify-content-center book-layout">
+            <div class="row gx-4 align-items-center justify-content-center blog-layout">
                 <div class="col-12 col-md-7 order-2 order-md-1">
                     <div class="my-3 my-md-5 text-center text-xl-start">
                         <h1 id="title" class="display-6 display-md-5 fw-bolder mb-4 text-center text-xl-start" style="color: darkred">
@@ -163,14 +163,14 @@
     function getBookDetail() {
         fetch("http://localhost:8080/books/" + bookId)
             .then(res => res.json())
-            .then(book => {
-                document.getElementById("websiteTitle").innerText = "کتاب " + book.title;
-                document.getElementById("title").innerText = book.title;
-                document.getElementById("author").innerText = book.author;
-                document.getElementById("description").innerText = book.description;
-                document.getElementById("price").innerText = book.price.toLocaleString("fa-IR");
-                document.getElementById("imageAddress").src = book.imageAddress;
-                getAverageRating(book).then(data => {
+            .then(blog => {
+                document.getElementById("websiteTitle").innerText = "کتاب " + blog.title;
+                document.getElementById("title").innerText = blog.title;
+                document.getElementById("author").innerText = blog.author;
+                document.getElementById("description").innerText = blog.description;
+                document.getElementById("price").innerText = blog.price.toLocaleString("fa-IR");
+                document.getElementById("imageAddress").src = blog.imageAddress;
+                getAverageRating(blog).then(data => {
                     if (data.averageRating != null && !isNaN(data.averageRating)) {
                         document.getElementById("bookRating").innerText = Number(data.averageRating.toFixed(1)).toLocaleString("fa-IR");
                         document.getElementById("bookRatingIndex").innerText = "(" + data.index.toLocaleString("fa-IR") + ")";
@@ -190,7 +190,7 @@
     }
 
     function getComments() {
-        fetch("http://localhost:8080/comments/book/" + bookId + "/sorted")
+        fetch("http://localhost:8080/comments/blog/" + bookId + "/sorted")
             .then(res => res.json())
             .then(comments => {
                 const commentPromises = comments.map(async c => {
@@ -222,8 +222,8 @@
             });
     }
 
-    function getAverageRating(book) {
-        return fetch("http://localhost:8080/comments/book/" + book.id)
+    function getAverageRating(blog) {
+        return fetch("http://localhost:8080/comments/blog/" + blog.id)
             .then(res => res.json())
             .then(comments => {
                 let rating = 0;

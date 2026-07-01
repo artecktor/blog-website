@@ -1,7 +1,0 @@
-package com.example.connecttodatabase.Repository;
-
-import com.example.connecttodatabase.Model.Book;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface BookRepository extends JpaRepository<Book, Integer> {
-}

@@ -26,7 +26,7 @@
                         <span style="width:24px"></span>
                     </div>
 
-                    <form action="http://localhost:8080/book/save" method="post">
+                    <form action="http://localhost:8080/blog/save" method="post">
 
                         <div class="mb-5 floating-group">
                             <input type="text" name="title" id="title" class="form-control form-btn p-3" placeholder="نام کتاب"
@@ -91,12 +91,12 @@
     function getBookDetail() {
         fetch("http://localhost:8080/books/" + bookId)
             .then(res => res.json())
-            .then(book => {
-                document.getElementById("title").value = book.title;
-                document.getElementById("author").value = book.author;
-                document.getElementById("price").value = book.price;
-                document.getElementById("description").value = book.description;
-                document.getElementById("imageAddress").value = book.imageAddress;
+            .then(blog => {
+                document.getElementById("title").value = blog.title;
+                document.getElementById("author").value = blog.author;
+                document.getElementById("price").value = blog.price;
+                document.getElementById("description").value = blog.description;
+                document.getElementById("imageAddress").value = blog.imageAddress;
                 document.getElementById("id").value = bookId;
             })
     }
