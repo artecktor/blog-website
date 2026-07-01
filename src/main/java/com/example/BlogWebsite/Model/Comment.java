@@ -1,4 +1,4 @@
-package com.example.connecttodatabase.Model;
+package com.example.BlogWebsite.Model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class Comment {
     private int id;
     private String text;
-    private int bookId;
+    private int blogId;
     private int userId;
     private int rating;
     private boolean accepted = false;
@@ -36,12 +36,12 @@ public class Comment {
         this.text = text;
     }
 
-    public int getBookId() {
-        return bookId;
+    public int getBlogId() {
+        return blogId;
     }
 
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
+    public void setBlogId(int blogId) {
+        this.blogId = blogId;
     }
 
     public int getUserId() {
