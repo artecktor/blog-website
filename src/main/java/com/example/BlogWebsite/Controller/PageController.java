@@ -26,9 +26,9 @@ public class PageController {
         return "home";
     }
 
-    @GetMapping("/book")
+    @GetMapping("/blog")
     public String book() {
-        return "bookDetail";
+        return "blog";
     }
 
     @GetMapping("/book-list")
@@ -53,7 +53,7 @@ public class PageController {
 
     @PostMapping("/book/save")
     public String saveBook(BlogSaveDTO blogSaveDTO) {
-        Blog blog = blogSaveDTO.convertToBook();
+        Blog blog = blogSaveDTO.convertToBlog();
         blogService.save(blog);
         return "redirect:/admin/books";
     }

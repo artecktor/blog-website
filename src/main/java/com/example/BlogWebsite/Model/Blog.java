@@ -11,6 +11,7 @@ public class Blog {
     private int id;
     private String title;
     private String author;
+    private String content;
     private String description;
     private String imageAddress;
     private LocalDateTime creationDate;
@@ -40,6 +41,14 @@ public class Blog {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Column(length = 1000)

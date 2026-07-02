@@ -17,14 +17,14 @@ public class BlogController {
     }
 
     @PostMapping("/update")
-    public String updateBook(BlogSaveDTO blogSaveDTO) {
-        Blog blog = blogSaveDTO.convertToBook();
+    public String updateBlog(BlogSaveDTO blogSaveDTO) {
+        Blog blog = blogSaveDTO.convertToBlog();
         blogService.update(blog);
         return "adminBook";
     }
 
     @GetMapping("/delete/{id}")
-    public void deleteBook(@PathVariable int id) {
+    public void deleteBlog(@PathVariable int id) {
         Blog blog = blogService.findById(id);
         blogService.delete(blog);
     }
@@ -35,7 +35,7 @@ public class BlogController {
     }
 
     @GetMapping
-    public List<Blog> findAllBooks() {
+    public List<Blog> findAllBlogs() {
         return blogService.findAll();
     }
 }

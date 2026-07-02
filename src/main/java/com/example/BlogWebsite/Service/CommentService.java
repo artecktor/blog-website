@@ -11,8 +11,8 @@ public interface CommentService {
     void accept(int id);
     Comment findById(int id);
     List<Comment> findByUserId(int userId);
-    List<Comment> findByBookId(int bookId);
+    List<Comment> findByBlogId(int blogId);
     List<Comment> findAll();
-    List<Comment> findByBookIdAndAcceptedTrueOrderByUpdatedAtDesc(int bookId);
+    List<Comment> findByBlogIdAndAcceptedTrueOrderByUpdatedAtDesc(int blogId);
     List<Comment> findAllTrueOrderByUpdatedAtDesc();
 }

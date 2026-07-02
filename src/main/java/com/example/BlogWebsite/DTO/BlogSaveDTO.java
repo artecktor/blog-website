@@ -54,7 +54,7 @@ public class BlogSaveDTO {
         this.id = id;
     }
 
-    public Blog convertToBook() {
+    public Blog convertToBlog() {
         Blog blog = new Blog();
         blog.setId(id);
         blog.setTitle(this.title);

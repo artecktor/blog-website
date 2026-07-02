@@ -46,14 +46,14 @@ public class CommentController {
         return commentService.findByUserId(id);
     }
 
-    @GetMapping("/book/{id}")
+    @GetMapping("/blog/{id}")
     public List<Comment> findByBookId(@PathVariable int id) {
-        return commentService.findByBookId(id);
+        return commentService.findByBlogId(id);
     }
 
-    @GetMapping("/book/{id}/sorted")
-    public List<Comment> findByBookIdSorted(@PathVariable int id) {
-        return commentService.findByBookIdAndAcceptedTrueOrderByUpdatedAtDesc(id);
+    @GetMapping("/blog/{id}/sorted")
+    public List<Comment> findByBlogIdSorted(@PathVariable int id) {
+        return commentService.findByBlogIdAndAcceptedTrueOrderByUpdatedAtDesc(id);
     }
     @GetMapping("/sorted")
     public List<Comment> findAllSorted() {

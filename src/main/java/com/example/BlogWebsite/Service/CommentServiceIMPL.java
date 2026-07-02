@@ -48,8 +48,8 @@ public class CommentServiceIMPL implements CommentService {
     }
 
     @Override
-    public List<Comment> findByBookId(int bookId) {
-        return commentRepository.findByBookId(bookId);
+    public List<Comment> findByBlogId(int bookId) {
+        return commentRepository.findByBlogId(bookId);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class CommentServiceIMPL implements CommentService {
     }
 
     @Override
-    public List<Comment> findByBookIdAndAcceptedTrueOrderByUpdatedAtDesc(int bookId) {
-        return commentRepository.findByBookIdAndAcceptedTrueOrderByUpdatedAtDesc(bookId);
+    public List<Comment> findByBlogIdAndAcceptedTrueOrderByUpdatedAtDesc(int blogId) {
+        return commentRepository.findByBlogIdAndAcceptedTrueOrderByUpdatedAtDesc(blogId);
     }
 
     @Override
