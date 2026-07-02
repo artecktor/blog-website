@@ -21,6 +21,14 @@
 
     --glass-bg: rgba(253, 252, 249, 0.55);
     --glass-border: rgba(255, 255, 255, 0.6);
+    --space-xs: 6px;
+    --space-sm: 12px;
+    --space-md: 20px;
+    --space-lg: 32px;
+    --space-xl: 48px;
+    --space-2xl: 72px;
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
 }
 
 *, *::before, *::after {
@@ -707,4 +715,98 @@ body {
 
 .glass-alert-ok{
     width:100%;
+}
+.page-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.5s;
+}
+
+.page-loader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.5s;
+}
+
+.page-loader-mark {
+    width: 44px;
+    height: 44px;
+    animation: loaderPulse 1.1s ease-in-out infinite;
+}
+
+.page-loader-mark .logo-mark {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes loaderPulse {
+    0%, 100% {
+        transform: scale(0.9);
+        opacity: 0.55;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-loader-mark {
+        animation: none;
+    }
+
+    .page-loader,
+    .page-loader.is-hidden {
+        transition: opacity 0.001ms !important;
+    }
+}
+.form-field,
+.checkbox-row,
+.btn-auth-primary,
+.divider,
+.oauth-row,
+.auth-switch {
+    opacity: 0;
+}
+
+.form-ready .form-field,
+.form-ready .checkbox-row,
+.form-ready .btn-auth-primary,
+.form-ready .divider,
+.form-ready .oauth-row,
+.form-ready .auth-switch {
+    animation: fieldFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fieldFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .form-field,
+    .checkbox-row,
+    .btn-auth-primary,
+    .divider,
+    .oauth-row,
+    .auth-switch {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
 }

@@ -18,7 +18,7 @@
 </div>
 <header class="site-header">
     <div class="header-inner">
-        <a href="#" class="logo">
+        <a href="http://localhost:8080" class="logo">
             <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
             </svg>
@@ -182,6 +182,8 @@
                 for (let i = 0; i < blogs.length; i++) {
                     convertToHTML(blogs[i]);
                 }
+                centerOddCard();
+                fadeInCards();
             })
     }
 
@@ -221,42 +223,116 @@
             });
         });
     }
+
+    let revealObserver;
+
+    function getRevealObserver() {
+        if (!revealObserver) {
+            revealObserver = new IntersectionObserver(
+                entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+                        }
+                    });
+                },
+                {
+                    threshold: 0.12,
+                    rootMargin: "0px 0px -60px 0px"
+                }
+            );
+        }
+        return revealObserver;
+    }
+
+    function revealize(elements) {
+        const observer = getRevealObserver();
+        elements.forEach(el => {
+            if (el.dataset.revealBound) return; // avoid double-binding the same element
+            el.dataset.revealBound = "true";
+            el.classList.add("reveal");
+            observer.observe(el);
+        });
+    }
+
     function initRevealAnimations() {
-        const elements = document.querySelectorAll(`
+        revealize(document.querySelectorAll(`
         .post-page-head,
         .post-hero,
         .post-body,
         .post-page-footer,
         .reviews-panel,
-        .post-card,
         .review-card,
         .footer-main
-    `);
+    `));
+    }
 
-        elements.forEach(el => {
-            el.classList.add("reveal");
+    function initCardTilt() {
+        if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        const MAX_TILT = 1;
+
+        document.addEventListener("mousemove", (e) => {
+            const card = e.target.closest(".post-card");
+            if (!card) return;
+
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const px = x / rect.width;
+            const py = y / rect.height;
+
+            const rotateY = (px - 0.5) * MAX_TILT * 2;
+            const rotateX = (0.5 - py) * MAX_TILT * 2;
+
+            card.classList.add("is-tilting");
+            card.style.transform =
+                `perspective(1400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px) scale(1.015)`;
+            card.style.setProperty("--glare-x", `${px * 100}%`);
+            card.style.setProperty("--glare-y", `${py * 100}%`);
         });
 
-        const observer = new IntersectionObserver(
-            entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("visible");
-                    }
-                });
-            },
-            {
-                threshold: 0.12,
-                rootMargin: "0px 0px -60px 0px"
-            }
-        );
+        document.addEventListener("mouseout", (e) => {
+            const card = e.target.closest(".post-card");
+            if (!card) return;
+            if (card.contains(e.relatedTarget)) return; // still moving within the same card
 
-        elements.forEach(el => observer.observe(el));
+            card.classList.remove("is-tilting");
+            card.style.transform = "";
+        });
+    }
+    function fadeInCards() {
+        const cards = document.querySelectorAll(".post-card:not(.card-loaded)");
+        cards.forEach((card, i) => {
+            card.style.animationDelay = `${i * 60}ms`;
+            card.classList.add("card-loaded");
+
+            card.addEventListener("animationend", () => {
+                card.style.animation = "none";
+            }, { once: true });
+        });
+    }
+    function centerOddCard() {
+        const cards = document.querySelectorAll(".post-card");
+
+        // remove previous state
+        cards.forEach(card => {
+            card.classList.remove("is-last-odd");
+        });
+
+        // if odd number and more than one card
+        if (cards.length > 1 && cards.length % 2 !== 0) {
+            cards[cards.length - 1].classList.add("is-last-odd");
+        }
     }
 
     window.addEventListener("load", () => {
         setTimeout(initRevealAnimations, 100);
+        initCardTilt();
     });
+
     loadBlogs();
 </script>
 </body>

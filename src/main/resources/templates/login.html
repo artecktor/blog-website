@@ -13,6 +13,14 @@
 </head>
 <body>
 
+<div class="page-loader" id="page-loader">
+    <div class="page-loader-mark">
+        <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+        </svg>
+    </div>
+</div>
+
 <div class="ambient" aria-hidden="true">
     <span class="blob blob-a"></span>
     <span class="blob blob-b"></span>
@@ -101,6 +109,37 @@
 </div>
 
 <script th:inline="javascript">
+
+    window.addEventListener("load", () => {
+        const loader = document.getElementById("page-loader");
+
+        const revealLoginError = () => {
+            if (loginError !== null && loginError.trim() !== "") {
+                showGlassAlert("ورود ناموفق", loginError);
+            }
+        };
+
+        const revealForm = () => {
+            const fields = document.querySelectorAll(
+                ".form-field, .checkbox-row, .btn-auth-primary, .divider, .oauth-row, .auth-switch"
+            );
+            fields.forEach((el, i) => {
+                el.style.animationDelay = `${i * 60}ms`;
+            });
+            document.querySelector(".auth-card").parentElement.classList.add("form-ready");
+        };
+
+        if (loader) {
+            setTimeout(() => {
+                loader.classList.add("is-hidden");
+                revealForm();
+                setTimeout(revealLoginError, 500);
+            }, 500);
+        } else {
+            revealForm();
+            revealLoginError();
+        }
+    });
 
     document.getElementById("toggle-password")
         .addEventListener("click", function () {
