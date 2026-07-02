@@ -11,7 +11,7 @@ public interface ApplicationUserService {
 
     void update(ApplicationUser user);
 
-    ApplicationUser findByUsernameAndPassword(String username, String password);
+    ApplicationUser findByEmailAndPassword(String email, String password);
 
     ApplicationUser findById(int id);
 

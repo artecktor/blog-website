@@ -1,24 +1,30 @@
 package com.example.BlogWebsite.Controller;
 
 import com.example.BlogWebsite.DTO.BlogSaveDTO;
+import com.example.BlogWebsite.DTO.CommentSaveDTO;
 import com.example.BlogWebsite.DTO.UserSaveDTO;
 import com.example.BlogWebsite.Model.ApplicationUser;
 import com.example.BlogWebsite.Model.Blog;
+import com.example.BlogWebsite.Model.Comment;
 import com.example.BlogWebsite.Model.Role;
 import com.example.BlogWebsite.Service.ApplicationUserService;
 import com.example.BlogWebsite.Service.BlogService;
+import com.example.BlogWebsite.Service.CommentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class PageController {
+    private final CommentService commentService;
     BlogService blogService;
     ApplicationUserService applicationUserService;
 
-    public PageController(BlogService blogService, ApplicationUserService applicationUserService) {
+    public PageController(BlogService blogService, ApplicationUserService applicationUserService, CommentService commentService) {
         this.blogService = blogService;
         this.applicationUserService = applicationUserService;
+        this.commentService = commentService;
     }
 
     @GetMapping
@@ -72,14 +78,26 @@ public class PageController {
     }
 
     @PostMapping("/login")
-    public String login(String username, String password) {
-        ApplicationUser byUsernameAndPassword = applicationUserService.findByUsernameAndPassword(username, password);
-        if (byUsernameAndPassword == null) {
-            return "login";
-        } else {
-            return "redirect:";
+    public String login(
+            String email,
+            String password,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        ApplicationUser user =
+                applicationUserService.findByEmailAndPassword(email, password);
+
+        if (user == null) {
+
+            redirectAttributes.addFlashAttribute(
+                    "loginError",
+                    "ایمیل یا رمز عبور اشتباه است"
+            );
+
+            return "redirect:/login";
         }
 
+        return "redirect:/";
     }
 
     @GetMapping("/login")
@@ -100,5 +118,16 @@ public class PageController {
     @GetMapping("/admin")
     public String admin() {
         return "admin";
+    }
+    @PostMapping("/comments/save")
+    public String saveFromForm(CommentSaveDTO commentSaveDTO) {
+        Comment comment = commentSaveDTO.convertToComment();
+        commentService.save(comment);
+        int blogId = comment.getBlogId();
+        return "redirect:/blog?id=" + blogId;
+    }
+    public @GetMapping("/test")
+    String test() {
+        return "test";
     }
 }

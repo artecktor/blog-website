@@ -31,8 +31,8 @@ public class ApplicationUserServiceIMPL implements ApplicationUserService {
     }
 
     @Override
-    public ApplicationUser findByUsernameAndPassword(String username, String password) {
-        return applicationUserRepository.findByUsernameAndPassword(username, password);
+    public ApplicationUser findByEmailAndPassword(String email, String password) {
+        return applicationUserRepository.findByEmailAndPassword(email, password);
     }
 
     @Override

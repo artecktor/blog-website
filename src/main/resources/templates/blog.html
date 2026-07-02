@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<div class="ambient" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+</div>
 
 <header class="site-header">
     <div class="header-inner">
@@ -29,18 +34,41 @@
                 <a href="#" class="nav-link">یادداشت‌ها</a>
                 <a href="#" class="nav-link">درباره</a>
             </nav>
+            <button class="hamburger-btn" type="button" id="hamburger-btn" aria-label="باز کردن منو"
+                    aria-expanded="false" aria-controls="mobile-nav-panel">
+                <span class="hamburger-lines">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </button>
 
             <div class="header-actions">
-                <button class="btn btn-ghost" type="button" disabled aria-disabled="true" title="به‌زودی">
+                <button class="btn btn-ghost" type="button" aria-disabled="true" title="به‌زودی"
+                        onclick="window.location.href='http://localhost:8080/login'">
                     ورود
                 </button>
-                <button class="btn btn-primary" type="button" disabled aria-disabled="true" title="به‌زودی">
+                <button class="btn btn-primary" type="button" aria-disabled="true" title="به‌زودی"
+                        onclick="window.location.href='http://localhost:8080/register'">
                     ساخت حساب کاربری
                 </button>
             </div>
         </div>
     </div>
 </header>
+<nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="ناوبری موبایل">
+    <a href="#" class="mobile-nav-link is-active">تازه‌ها</a>
+    <a href="#" class="mobile-nav-link">جستارها</a>
+    <a href="#" class="mobile-nav-link">یادداشت‌ها</a>
+    <a href="#" class="mobile-nav-link">درباره</a>
+    <div class="mobile-nav-divider"></div>
+    <button class="mobile-nav-cta btn-ghost-mobile" type="button"
+            onclick="window.location.href='http://localhost:8080/login'">ورود
+    </button>
+    <button class="mobile-nav-cta btn-primary-mobile" type="button"
+            onclick="window.location.href='http://localhost:8080/register'">ساخت حساب کاربری
+    </button>
+</nav>
 
 <main>
 
@@ -101,63 +129,94 @@
 
     <section class="reviews">
         <div class="reviews-inner">
+            <div class="reviews-panel">
 
-            <div class="posts-header reviews-header">
-                <h2 class="section-title">دیدگاه‌ها <span class="review-count" id="review-count">(۳)</span></h2>
-                <span class="section-rule" aria-hidden="true"></span>
-            </div>
+                <div class="review-col">
+                    <div class="reviews-header">
+                        <h2 class="section-title">دیدگاه‌ها <span class="review-count" id="review-count">(۳)</span></h2>
+                        <span class="section-rule" aria-hidden="true"></span>
+                        <svg class="title-spark" viewBox="0 0 24 24">
+                            <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+                        </svg>
+                    </div>
 
-            <div class="review-list" id="review-list">
-            </div>
+                    <div class="review-list" id="review-list"></div>
 
-            <div class="review-form-wrap">
-                <h3 class="review-form-title">دیدگاه خود را بنویسید</h3>
+                    <div class="view-all-wrap">
+                        <button class="btn-view-all" type="button" id="view-all-btn">
+                            <span aria-hidden="true">←</span> مشاهده همه دیدگاه‌ها
+                        </button>
+                    </div>
+                </div>
 
-                <form class="review-form" id="review-form" onsubmit="return false;">
+                <div class="form-col">
+                    <div class="form-col-header">
+                        <h2 class="section-title">دیدگاه خود را بنویسید</h2>
+                        <span class="section-rule" aria-hidden="true"></span>
+                        <svg class="title-spark" viewBox="0 0 24 24">
+                            <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+                        </svg>
+                    </div>
 
-                    <div class="form-row">
+                    <form class="review-form" id="review-form" action="http://localhost:8080/comments/save"
+                          method="post">
+                        <input type="hidden" name="userId" id="comment-userId">
+                        <input type="hidden" name="blogId" id="comment-blogId">
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="review-password">رمز عبور</label>
+                                <div class="input-icon-wrap">
+                                    <svg viewBox="0 0 24 24">
+                                        <rect x="5" y="10" width="14" height="10" rx="2"/>
+                                        <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                                    </svg>
+                                    <input id="review-password" name="password" type="password" placeholder="••••••••"
+                                           dir="ltr" required>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="review-email">ایمیل</label>
+                                <div class="input-icon-wrap">
+                                    <svg viewBox="0 0 24 24">
+                                        <rect x="3" y="5" width="18" height="14" rx="2.5"/>
+                                        <path d="M3 7l9 6 9-6"/>
+                                    </svg>
+                                    <input id="review-email" name="email" type="text" placeholder="you@example.com" dir="ltr"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="form-hint">ایمیل و رمز عبور فقط برای شناسایی دیدگاه شما استفاده می‌شود، نه ساخت حساب
+                            کاربری.</p>
+
                         <div class="form-field">
-                            <label for="review-email">ایمیل</label>
-                            <input id="review-email" name="email" type="email" placeholder="you@example.com" dir="ltr"
-                                   required>
+                            <label>امتیاز شما</label>
+                            <div class="star-rating" dir="ltr">
+                                <input type="radio" id="star5" name="rating" value="5"><label for="star5"
+                                                                                              title="عالی">★</label>
+                                <input type="radio" id="star4" name="rating" value="4"><label for="star4"
+                                                                                              title="خوب">★</label>
+                                <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="متوسط">★</label>
+                                <input type="radio" id="star2" name="rating" value="2"><label for="star2"
+                                                                                              title="ضعیف">★</label>
+                                <input type="radio" id="star1" name="rating" value="1"><label for="star1"
+                                                                                              title="بد">★</label>
+                            </div>
                         </div>
+
                         <div class="form-field">
-                            <label for="review-password">رمز عبور</label>
-                            <input id="review-password" name="password" type="password" placeholder="••••••••" dir="ltr"
-                                   required>
+                            <label for="review-text">دیدگاه</label>
+                            <textarea id="review-text" name="text" rows="4"
+                                      placeholder="نظر خود را درباره‌ی این جستار بنویسید…" required></textarea>
                         </div>
-                    </div>
 
-                    <p class="form-hint">ایمیل و رمز عبور فقط برای شناسایی دیدگاه شما استفاده می‌شود، نه ساخت حساب
-                        کاربری.</p>
+                        <button class="btn btn-primary" type="submit">ثبت دیدگاه</button>
+                    </form>
+                </div>
 
-                    <div class="form-field">
-                        <label>امتیاز شما</label>
-                        <div class="star-rating" dir="ltr">
-                            <input type="radio" id="star5" name="rating" value="5"><label for="star5"
-                                                                                          title="عالی">★</label>
-                            <input type="radio" id="star4" name="rating" value="4"><label for="star4"
-                                                                                          title="خوب">★</label>
-                            <input type="radio" id="star3" name="rating" value="3"><label for="star3"
-                                                                                          title="متوسط">★</label>
-                            <input type="radio" id="star2" name="rating" value="2"><label for="star2"
-                                                                                          title="ضعیف">★</label>
-                            <input type="radio" id="star1" name="rating" value="1"><label for="star1"
-                                                                                          title="بد">★</label>
-                        </div>
-                    </div>
-
-                    <div class="form-field">
-                        <label for="review-text">دیدگاه</label>
-                        <textarea id="review-text" name="text" rows="4"
-                                  placeholder="نظر خود را درباره‌ی این جستار بنویسید…" required></textarea>
-                    </div>
-
-                    <button class="btn btn-primary" type="submit">ثبت دیدگاه</button>
-
-                </form>
             </div>
-
         </div>
     </section>
 
@@ -242,6 +301,20 @@
         <p class="footer-credit">با آرامش نوشته شده، در فرانکفورت.</p>
     </div>
 </footer>
+
+<div class="glass-overlay" id="glass-alert-overlay">
+    <div class="glass-alert" role="alertdialog" aria-modal="true" aria-labelledby="glass-alert-title">
+        <button class="glass-alert-close" type="button" id="glass-alert-close" aria-label="بستن">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M5 5 L19 19 M19 5 L5 19"/>
+            </svg>
+        </button>
+        <h3 class="glass-alert-title" id="glass-alert-title">عنوان</h3>
+        <p class="glass-alert-text" id="glass-alert-text">متن پیام اینجا قرار می‌گیرد.</p>
+        <button class="btn btn-primary glass-alert-ok" type="button" id="glass-alert-ok">متوجه شدم</button>
+    </div>
+</div>
+
 <script>
     let blogId = new URLSearchParams(window.location.search).get("id");
 
@@ -250,7 +323,7 @@
             .then(res => res.json())
             .then(blog => {
                 document.getElementById("post-author").innerText = blog.author;
-                document.getElementById("post-time").innerText = String(Math.ceil(blog.content.length / 650));
+                document.getElementById("post-time").innerText = String(Math.ceil(blog.content.length / 1200).toLocaleString("fa-IR"));
                 document.getElementById("post-title").innerText = blog.title;
                 document.getElementById("post-lead").innerText = blog.description;
                 document.getElementById("post-image").src = blog.imageAddress;
@@ -271,12 +344,12 @@
     }
 
     function convertToHTML(blog) {
-        let readingTime = Math.ceil(blog.content.length / 1350);
+        let readingTime = Math.ceil(blog.content.length / 1200);
         let card = `
         <article class="post-card">
                 <div class="post-thumb" aria-hidden="true"><img src="${blog.imageAddress}" alt=""></div>
                 <div class="post-card-body">
-                    <p class="post-meta"><span>${blog.author}</span><span> · ${readingTime} دقیقه مطالعه</span></p>
+                    <p class="post-meta"><span>${blog.author}</span><span> · ${readingTime.toLocaleString("fa-IR")} دقیقه مطالعه</span></p>
                     <h3 class="post-title">${blog.title}</h3>
                     <p class="post-excerpt">${blog.description}</p>
                     <a href="http://localhost:8080/blog?id=${blog.id}" class="read-link"><span aria-hidden="true">←</span> ادامه مطلب</a>
@@ -301,12 +374,16 @@
     `;
     }
 
+    const COMMENTS_PREVIEW_COUNT = 3;
+    let allCommentsHTML = [];
+
     function getComments() {
         fetch("http://localhost:8080/comments/blog/" + blogId + "/sorted")
             .then(res => res.json())
             .then(comments => {
                 document.getElementById("review-count").innerText =
-                    `(${comments.length})`;
+                    `(${comments.length.toLocaleString("fa-IR")})`;
+
                 const commentPromises = comments.map(async c => {
                     const userRes = await fetch("http://localhost:8080/users/" + c.userId);
                     const user = await userRes.json();
@@ -322,22 +399,189 @@
                     });
                     const formattedDate = persianFormatter.format(date);
                     return `<div class="review-card">
-                    <div class="review-head">
-                        <div class="review-avatar">${user.username[0].toUpperCase()}</div>
-                        <div class="review-who">
-                            <p class="review-name">${user.username}</p>
-                            ${loadStars(c.rating)}
-                        </div>
-                        <span class="review-date">${formattedDate}</span>
+                <div class="review-head">
+                    <div class="review-avatar">${user.username[0].toUpperCase()}</div>
+                    <div class="review-who">
+                        <p class="review-name">${user.username}</p>
+                        ${loadStars(c.rating)}
                     </div>
-                    <p class="review-text">${c.text}</p>
-                </div>`;
+                    <span class="review-date">${formattedDate}</span>
+                </div>
+                <p class="review-text">${c.text}</p>
+            </div>`;
                 });
+
                 Promise.all(commentPromises).then(html => {
-                    document.getElementById("review-list").innerHTML = html.join("");
+                    allCommentsHTML = html;
+                    renderComments(false);
                 });
             });
     }
+
+    function renderComments(showAll) {
+        const list = document.getElementById("review-list");
+        const viewAllBtn = document.getElementById("view-all-btn");
+        const toShow = showAll ? allCommentsHTML : allCommentsHTML.slice(0, COMMENTS_PREVIEW_COUNT);
+
+        list.innerHTML = toShow.length
+            ? toShow.join("")
+            : `<p class="form-hint">هنوز دیدگاهی ثبت نشده است.</p>`;
+
+        if (!viewAllBtn) return;
+
+        if (allCommentsHTML.length <= COMMENTS_PREVIEW_COUNT) {
+            viewAllBtn.closest(".view-all-wrap").style.display = "none";
+            return;
+        }
+
+        viewAllBtn.closest(".view-all-wrap").style.display = "";
+        viewAllBtn.innerHTML = showAll
+            ? `<span aria-hidden="true">↑</span> نمایش کمتر`
+            : `<span aria-hidden="true">←</span> مشاهده همه دیدگاه‌ها`;
+        viewAllBtn.dataset.expanded = showAll ? "true" : "false";
+    }
+
+    document.getElementById("view-all-btn").addEventListener("click", () => {
+        const isExpanded = document.getElementById("view-all-btn").dataset.expanded === "true";
+        renderComments(!isExpanded);
+    });
+
+    document.getElementById("review-form").addEventListener("submit", submitComment);
+
+    async function submitComment(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const email = document.getElementById("review-email").value;
+        const password = document.getElementById("review-password").value;
+        const ratingInput = document.querySelector('input[name="rating"]:checked');
+
+        if (!email || !password || !ratingInput) {
+            showGlassAlert("فیلدهای ناقص", "لطفاً همه‌ی فیلدها را پر کنید.");
+            return;
+        }
+
+        const submitBtn = form.querySelector(".btn");
+        submitBtn.disabled = true;
+
+        try {
+            const res = await fetch("http://localhost:8080/users");
+            if (!res.ok) throw new Error("خطا در دریافت اطلاعات کاربران");
+
+            const users = await res.json();
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                showGlassAlert("ورود ناموفق", "ایمیل یا رمز عبور اشتباه است.");
+                clearCommentForm();
+                submitBtn.disabled = false;
+                return;
+            }
+
+            document.getElementById("comment-userId").value = user.id;
+            document.getElementById("comment-blogId").value = blogId;
+
+            form.submit();
+        } catch (err) {
+            console.error(err);
+            showGlassAlert("خطا", "خطایی رخ داد. لطفاً دوباره تلاش کنید.");
+            clearCommentForm();
+            submitBtn.disabled = false;
+        }
+    }
+
+    const hamburgerBtn = document.getElementById("hamburger-btn");
+    const mobileNavPanel = document.getElementById("mobile-nav-panel");
+
+    if (hamburgerBtn && mobileNavPanel) {
+        hamburgerBtn.addEventListener("click", () => {
+            const isOpen = mobileNavPanel.classList.toggle("is-open");
+            hamburgerBtn.classList.toggle("is-open", isOpen);
+            hamburgerBtn.setAttribute("aria-expanded", String(isOpen));
+            document.body.classList.toggle("nav-open", isOpen);
+        });
+
+        mobileNavPanel.querySelectorAll(".mobile-nav-link, .mobile-nav-cta").forEach(el => {
+            el.addEventListener("click", () => {
+                mobileNavPanel.classList.remove("is-open");
+                hamburgerBtn.classList.remove("is-open");
+                hamburgerBtn.setAttribute("aria-expanded", "false");
+                document.body.classList.remove("nav-open");
+            });
+        });
+    }
+    function initRevealAnimations() {
+        const elements = document.querySelectorAll(`
+        .post-page-head,
+        .post-hero,
+        .post-body,
+        .post-page-footer,
+        .reviews-panel,
+        .post-card,
+        .review-card,
+        .footer-main
+    `);
+
+        elements.forEach(el => {
+            el.classList.add("reveal");
+        });
+
+        const observer = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                    }
+                });
+            },
+            {
+                threshold: 0.12,
+                rootMargin: "0px 0px -60px 0px"
+            }
+        );
+
+        elements.forEach(el => observer.observe(el));
+    }
+
+    function showGlassAlert(title, text) {
+        const overlay = document.getElementById("glass-alert-overlay");
+
+        document.getElementById("glass-alert-title").innerText = title;
+        document.getElementById("glass-alert-text").innerText = text;
+
+        overlay.classList.remove("is-open");
+        void overlay.offsetWidth;
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                overlay.classList.add("is-open");
+            });
+        });
+
+        document.body.style.overflow = "hidden";
+    }
+
+    function hideGlassAlert() {
+        document.getElementById("glass-alert-overlay").classList.remove("is-open");
+        document.body.style.overflow = "";
+    }
+
+    document.getElementById("glass-alert-close").addEventListener("click", hideGlassAlert);
+    document.getElementById("glass-alert-ok").addEventListener("click", hideGlassAlert);
+    document.getElementById("glass-alert-overlay").addEventListener("click", (e) => {
+        if (e.target.id === "glass-alert-overlay") hideGlassAlert();
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") hideGlassAlert();
+    });
+
+    window.addEventListener("load", () => {
+        setTimeout(initRevealAnimations, 100);
+    });
+    function clearCommentForm() {
+        document.getElementById("review-form").reset();
+    }
+
 
     getBlogDetails();
     getComments();
