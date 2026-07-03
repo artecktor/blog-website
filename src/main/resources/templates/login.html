@@ -109,12 +109,13 @@
 </div>
 
 <script th:inline="javascript">
-
+    // <!------------------------------------------------------>
     window.addEventListener("load", () => {
         const loader = document.getElementById("page-loader");
+        const hasError = loginError !== null && loginError.trim() !== "";
 
         const revealLoginError = () => {
-            if (loginError !== null && loginError.trim() !== "") {
+            if (hasError) {
                 showGlassAlert("ورود ناموفق", loginError);
             }
         };
@@ -128,6 +129,16 @@
             });
             document.querySelector(".auth-card").parentElement.classList.add("form-ready");
         };
+
+        if (hasError) {
+            if (loader) {
+                loader.style.transition = "none";
+                loader.classList.add("is-hidden");
+            }
+            revealForm();
+            revealLoginError();
+            return;
+        }
 
         if (loader) {
             setTimeout(() => {
@@ -189,14 +200,14 @@
         .addEventListener("click", hideGlassAlert);
 
     document.getElementById("glass-alert-overlay")
-        .addEventListener("click", (e)=>{
-            if(e.target.id==="glass-alert-overlay"){
+        .addEventListener("click", (e) => {
+            if (e.target.id === "glass-alert-overlay") {
                 hideGlassAlert();
             }
         });
 
-    document.addEventListener("keydown",(e)=>{
-        if(e.key==="Escape"){
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
             hideGlassAlert();
         }
     });
@@ -204,13 +215,6 @@
 
     /* Login error from backend */
     let loginError = /*[[${loginError}]]*/ null;
-
-    if (loginError !== null && loginError.trim() !== "") {
-        showGlassAlert(
-            "ورود ناموفق",
-            loginError
-        );
-    }
 
 </script>
 </body>

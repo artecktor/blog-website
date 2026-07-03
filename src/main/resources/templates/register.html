@@ -70,7 +70,7 @@
 
             <div class="form-field">
                 <div class="password-field floating">
-                    <input id="register-password2" name="passwordConfirm" type="password" placeholder=" " required>
+                    <input id="register-password2" name="" type="password" placeholder=" " required>
                     <label for="register-password2">تکرار رمز عبور</label>
                     <button type="button" class="toggle-password" id="toggle-password2" aria-label="نمایش رمز عبور">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -212,6 +212,29 @@
             this.classList.toggle("is-visible", isHidden);
         });
 
+    const password = document.getElementById("register-password");
+    const repeat = document.getElementById("register-password2");
+
+    function validatePasswords() {
+
+        if (repeat.value.trim() === "") {
+            repeat.classList.remove("valid", "invalid");
+            return;
+        }
+
+        if (password.value === repeat.value) {
+            repeat.classList.add("valid");
+            repeat.classList.remove("invalid");
+        } else {
+            repeat.classList.add("invalid");
+            repeat.classList.remove("valid");
+        }
+    }
+
+    // Check while typing in either field
+    password.addEventListener("input", validatePasswords);
+    repeat.addEventListener("input", validatePasswords);
+
     function showGlassAlert(title, text) {
         const overlay = document.getElementById("glass-alert-overlay");
 
@@ -265,6 +288,47 @@
             registerError
         );
     }
+
+    document.getElementById("register-form")
+        .addEventListener("submit", function (event) {
+
+            const password =
+                document.getElementById("register-password").value.trim();
+
+            const repeatPassword =
+                document.getElementById("register-password2").value.trim();
+
+            // Empty check (optional because required already exists)
+            if (!password || !repeatPassword) {
+                event.preventDefault();
+
+                showGlassAlert(
+                    "فیلدهای ناقص",
+                    "لطفاً هر دو فیلد رمز عبور را پر کنید."
+                );
+
+                return;
+            }
+
+            // Password match check
+            if (password !== repeatPassword) {
+                event.preventDefault();
+
+                showGlassAlert(
+                    "عدم تطابق رمز عبور",
+                    "رمز عبور و تکرار رمز عبور باید یکسان باشند."
+                );
+
+                // clear only repeat password (optional)
+                document.getElementById("register-password2").value = "";
+
+                // focus back
+                document.getElementById("register-password2").focus();
+
+                return;
+            }
+
+        });
 
 </script>
 </body>

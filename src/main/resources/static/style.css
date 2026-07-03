@@ -79,8 +79,9 @@ img {
 /* --------------------------------------------- Ambient background --------------------------------------------- */
 body {
     position: relative;
-    overflow-x: hidden;
-    background: radial-gradient(circle at top right, rgba(255, 140, 90, .10), transparent 40%), radial-gradient(circle at bottom left, rgba(255, 180, 120, .08), transparent 45%), var(--cream);
+    background: radial-gradient(circle at top right, rgba(255, 140, 90, .10), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(255, 180, 120, .08), transparent 45%),
+    var(--cream);
 }
 
 .ambient {
@@ -175,7 +176,7 @@ body {
 .site-header {
     position: sticky;
     top: 18px;
-    z-index: 100;
+    z-index: 1000;
     padding: 0 24px;
     background: transparent;
     border: none;
@@ -657,12 +658,14 @@ body.nav-open {
     transform-style: preserve-3d;
     will-change: transform;
 }
+
 .post-card.is-last-odd {
     grid-column: 1 / -1;
     max-width: calc(50% - 14px);
     width: 100%;
     justify-self: center;
 }
+
 .post-card.card-loaded {
     animation: cardFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -681,6 +684,7 @@ body.nav-open {
     border-color: rgba(255, 255, 255, .65);
     box-shadow: 0 26px 50px -20px rgba(43, 38, 33, 0.3);
 }
+
 @media (prefers-reduced-motion: reduce) {
     .post-card.card-loaded {
         animation: none;
@@ -1366,6 +1370,7 @@ body {
         opacity: 1;
     }
 }
+
 @keyframes cardFadeIn {
     from {
         opacity: 0;
@@ -1468,11 +1473,12 @@ body {
         display: none;
     }
 }
+
 /* ==========================
    Glass Alert — Premium Motion
 ========================== */
 
-.glass-overlay{
+.glass-overlay {
     position: fixed;
     inset: 0;
 
@@ -1480,23 +1486,22 @@ body {
     align-items: center;
     justify-content: center;
 
-    background: rgba(20,20,20,.18);
+    background: rgba(20, 20, 20, .18);
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
 
     opacity: 0;
     visibility: hidden;
 
-    transition:
-            opacity .35s cubic-bezier(.22,1,.36,1),
-            backdrop-filter .35s cubic-bezier(.22,1,.36,1),
-            visibility .35s;
+    transition: opacity .35s cubic-bezier(.22, 1, .36, 1),
+    backdrop-filter .35s cubic-bezier(.22, 1, .36, 1),
+    visibility .35s;
 
     z-index: 9999;
 }
 
 /* opened state */
-.glass-overlay.is-open{
+.glass-overlay.is-open {
     opacity: 1;
     visibility: visible;
 
@@ -1504,11 +1509,11 @@ body {
     -webkit-backdrop-filter: blur(14px);
 }
 
-.glass-alert{
+.glass-alert {
     width: min(420px, calc(100vw - 40px));
 
-    background: rgba(253,252,249,.62);
-    border: 1px solid rgba(255,255,255,.7);
+    background: rgba(253, 252, 249, .62);
+    border: 1px solid rgba(255, 255, 255, .7);
 
     border-radius: 28px;
 
@@ -1517,85 +1522,78 @@ body {
     backdrop-filter: blur(28px) saturate(160%);
     -webkit-backdrop-filter: blur(28px) saturate(160%);
 
-    box-shadow:
-            0 35px 70px -25px rgba(0,0,0,.25),
-            inset 0 1px 0 rgba(255,255,255,.5);
+    box-shadow: 0 35px 70px -25px rgba(0, 0, 0, .25),
+    inset 0 1px 0 rgba(255, 255, 255, .5);
 
-    text-align:center;
+    text-align: center;
 
     /* initial hidden state */
     opacity: 0;
-    transform:
-            translateY(24px)
-            scale(.94);
+    transform: translateY(24px) scale(.94);
 
     filter: blur(8px);
 
-    transition:
-            transform .55s cubic-bezier(.22,1,.36,1),
-            opacity .45s cubic-bezier(.22,1,.36,1),
-            filter .45s cubic-bezier(.22,1,.36,1);
+    transition: transform .55s cubic-bezier(.22, 1, .36, 1),
+    opacity .45s cubic-bezier(.22, 1, .36, 1),
+    filter .45s cubic-bezier(.22, 1, .36, 1);
 }
 
 /* animate card separately */
-.glass-overlay.is-open .glass-alert{
-    opacity:1;
+.glass-overlay.is-open .glass-alert {
+    opacity: 1;
 
-    transform:
-            translateY(0)
-            scale(1);
+    transform: translateY(0) scale(1);
 
-    filter:blur(0);
+    filter: blur(0);
 }
 
 /* close button */
-.glass-alert-close{
-    position:absolute;
-    top:14px;
-    left:14px;
+.glass-alert-close {
+    position: absolute;
+    top: 14px;
+    left: 14px;
 
-    width:34px;
-    height:34px;
+    width: 34px;
+    height: 34px;
 
-    border:none;
-    border-radius:50%;
+    border: none;
+    border-radius: 50%;
 
-    background:transparent;
+    background: transparent;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    cursor:pointer;
+    cursor: pointer;
 
-    color:var(--ink-soft);
+    color: var(--ink-soft);
 
-    transition:
-            background .2s var(--ease),
-            transform .2s var(--ease),
-            color .2s var(--ease);
+    transition: background .2s var(--ease),
+    transform .2s var(--ease),
+    color .2s var(--ease);
 }
 
-.glass-alert-close:hover{
-    background:rgba(217,119,87,.12);
-    color:var(--terracotta-dk);
+.glass-alert-close:hover {
+    background: rgba(217, 119, 87, .12);
+    color: var(--terracotta-dk);
 
-    transform:rotate(90deg);
+    transform: rotate(90deg);
 }
 
-.glass-alert-title{
-    margin:0 0 10px;
+.glass-alert-title {
+    margin: 0 0 10px;
 
-    font-family:var(--font-display);
-    font-size:1.3rem;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
 }
 
-.glass-alert-text{
-    margin:0 0 24px;
-    color:var(--ink-soft);
-    line-height:1.8;
+.glass-alert-text {
+    margin: 0 0 24px;
+    color: var(--ink-soft);
+    line-height: 1.8;
 }
 
-.glass-alert-ok{
-    width:100%;
+.glass-alert-ok {
+    width: 100%;
 }
