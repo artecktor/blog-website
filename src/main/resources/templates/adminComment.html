@@ -1,176 +1,303 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت دیدگاه‌ها — درنگ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500;600;700&family=Vazirmatn:wght@400;500;600&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>صفحه مدیریت نظرات</title>
+    <link rel="stylesheet" href="/admin-style.css">
 </head>
-
 <body>
 
-<nav style="direction: ltr" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top p-4">
-    <div class="container px-4">
-        <a class="navbar-brand vazirBoldFont fs-4" href="http://localhost:8080/admin">
-            پنل مدیریت کتابستان
+<div class="page-loader" id="page-loader">
+    <div class="page-loader-mark">
+        <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+        </svg>
+    </div>
+</div>
+
+<div class="ambient" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+</div>
+
+<header class="site-header">
+    <div class="header-inner admin-header-inner">
+        <a href="http://localhost:8080/admin" class="logo">
+            <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+            </svg>
+            درنگ
+            <span class="admin-badge">مدیریت</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+
+        <a href="http://localhost:8080/admin" class="admin-exit-link">
+            <span>بازگشت به پنل</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M15 5 L8 12 L15 19"/>
+            </svg>
+        </a>
+    </div>
+</header>
+
+<main>
+
+    <section class="admin-hero reveal">
+        <p class="eyebrow">پنل مدیریت درنگ</p>
+        <h1 class="admin-title">مدیریت دیدگاه‌ها</h1>
+        <p class="admin-sub">دیدگاه‌های تازه را بررسی کنید، تأیید کنید یا برای همیشه حذفشان کنید.</p>
+    </section>
+
+    <section class="comments-toolbar reveal">
+        <button class="filter-pill is-active" data-filter="all">
+            همه <span class="filter-pill-count" id="count-all">۰</span>
         </button>
-        <div id="navbarSupportedContent" class="navbar-collapse pt-4 mt-2 m-lg-0 p-lg-0 collapse rounded bg-dark">
-            <ul style="font-size: larger" class="navbar-nav ms-lg-auto mb-2 mb-lg-0 align-items-center text-center">
-                <li class="nav-item m-1">
-                    <a class="nav-link" href="http://localhost:8080/blog-list">کتاب ها</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" aria-current="page" href="http://localhost:8080">بازگشت به سایت</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+        <button class="filter-pill" data-filter="pending">
+            در انتظار بررسی <span class="filter-pill-count" id="count-pending">۰</span>
+        </button>
+        <button class="filter-pill" data-filter="accepted">
+            تأیید شده <span class="filter-pill-count" id="count-accepted">۰</span>
+        </button>
+    </section>
 
-<div class="container panel-header">
-    <div class="row align-items-center">
-        <div class="col-12 col-md-9">
-            <h1 class="vazirBoldFont">مدیریت نظرات</h1>
+    <section class="comments-wrap reveal" id="comments-wrap">
+        <div class="comments-skeleton" id="comments-skeleton">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
         </div>
-    </div>
-</div>
-
-<div class="container mb-5">
-    <div class="table-card">
-        <div style="min-height: 150px" class="table-responsive">
-            <table class="table align-middle text-center table-hover">
-                <thead>
-                <tr>
-                    <th>نام کاربری</th>
-                    <th>نام کتاب</th>
-                    <th>متن</th>
-                    <th>امتیاز</th>
-                    <th>
-                        <div class="dropdown-center">
-                            <a style="text-decoration: none; direction: ltr" class="dropdown-toggle" type="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                پذیرفته
-                            </a>
-                            <ul class="dropdown-menu text-center">
-                                <li><a href="#" onclick="activateDropdownItem(this); return false;" class="dropdown-item active">همه</a></li>
-                                <li><a href="#" onclick="activateDropdownItem(this); return false;" class="dropdown-item">پذیرفته شده</a></li>
-                                <li><a href="#" onclick="activateDropdownItem(this); return false;" class="dropdown-item">پذیرفته نشده</a></li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>عملیات</th>
-                </tr>
-                </thead>
-                <tbody id="table-body">
-                </tbody>
-            </table>
+        <div id="comments-list" style="display:none;"></div>
+        <div class="comments-empty" id="comments-empty" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <path d="M4 5.5 h16 a1 1 0 0 1 1 1 v9 a1 1 0 0 1 -1 1 H9 l-4.5 4 v-4 H4 a1 1 0 0 1 -1 -1 v-9 a1 1 0 0 1 1 -1 Z"/>
+            </svg>
+            <p>دیدگاهی برای نمایش وجود ندارد.</p>
         </div>
-    </div>
-</div>
+    </section>
 
-<footer class="py-4 bg-dark">
-    <div class="container">
-        <p class="m-0 text-center text-white">
-            کتابفروشی برتر - تمام حقوق محفوظ است ©
-        </p>
+</main>
+
+<footer class="site-footer admin-footer">
+    <div class="footer-bottom admin-footer-bottom">
+        <div class="admin-footer-brand">
+            <svg class="logo-mark small" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+            </svg>
+            <span>پنل مدیریت درنگ</span>
+        </div>
+        <p>© ۱۴۰۵ درنگ. دسترسی محدود به مدیران سایت.</p>
     </div>
 </footer>
 
 <script>
-    function activateDropdownItem(element) {
-        const menu = element.closest(".dropdown-menu");
-        menu.querySelectorAll(".dropdown-item").forEach(item => item.classList.remove("active"));
-        element.classList.add("active");
-        loadComments();
-    }
+    const API_BASE = "http://localhost:8080";
+    let allComments = [];
+    let blogsById = {};
+    let currentFilter = "all";
 
-    function getActiveFilter() {
-        const activeItem = document.querySelector(".dropdown-item.active");
-        return activeItem ? activeItem.innerText : "همه";
-    }
+    const listEl = document.getElementById("comments-list");
+    const skeletonEl = document.getElementById("comments-skeleton");
+    const emptyEl = document.getElementById("comments-empty");
 
-    async function loadComments() {
-        document.getElementById("table-body").innerHTML = "";
-        const res = await fetch("http://localhost:8080/comments/sorted");
-        let comments = await res.json();
-        const filter = getActiveFilter();
-        if (filter === "پذیرفته شده") {
-            comments = comments.filter(c => c.accepted);
-        } else if (filter === "پذیرفته نشده") {
-            comments = comments.filter(c => !c.accepted);
+    const faNum = (n) => (n ?? 0).toLocaleString("fa-IR");
+
+    function pickText(c) {
+        return c.comment ?? c.text ?? c.content ?? c.body ?? "";
+    }
+    function pickName(c) {
+        return c.name ?? c.author ?? c.username ?? (c.user && c.user.name) ?? "کاربر مهمان";
+    }
+    function pickDate(c) {
+        const raw = c.createdAt ?? c.date ?? c.created_at ?? null;
+        if (!raw) return "";
+        try {
+            return new Date(raw).toLocaleDateString("fa-IR", { year: "numeric", month: "long", day: "numeric" });
+        } catch (e) {
+            return "";
         }
-        for (let comment of comments) {
-            await convertToHTML(comment);
-        }
+    }
+    function pickBlogTitle(c) {
+        const id = c.blogId ?? c.blog_id ?? (c.blog && c.blog.id);
+        if (id && blogsById[id]) return blogsById[id].title ?? blogsById[id].name;
+        return c.blogTitle ?? null;
+    }
+    function initial(name) {
+        return (name || "?").trim().charAt(0).toUpperCase();
     }
 
-    async function getUsername(userId) {
-        const res = await fetch("http://localhost:8080/users/" + userId);
-        const user = await res.json();
-        return user.username;
+    function renderCounts() {
+        const pendingCount = allComments.filter(c => !c.accepted).length;
+        const acceptedCount = allComments.filter(c => c.accepted).length;
+        document.getElementById("count-all").innerText = faNum(allComments.length);
+        document.getElementById("count-pending").innerText = faNum(pendingCount);
+        document.getElementById("count-accepted").innerText = faNum(acceptedCount);
     }
 
-    async function getBookTitle(bookId) {
-        const res = await fetch("http://localhost:8080/books/" + bookId);
-        const blog = await res.json();
-        return blog.title;
-    }
-
-    function loadStars(rating) {
-        let stars = "";
-        for (let i = 5; i >= 1; i--) {
-            stars += i <= rating ? "<span class='fa fa-star checked'></span>" : "<span class='fa fa-star'></span>";
-        }
-        return stars;
-    }
-
-    async function convertToHTML(comment) {
-        const username = await getUsername(comment.userId);
-        const bookTitle = await getBookTitle(comment.bookId);
-        const tr = document.createElement("tr");
-        if (!comment.accepted) tr.classList.add("table-danger");
-        tr.innerHTML = `
-            <td class="p-4"><a style="text-decoration: none" href="http://localhost:8080/admin/users?activeId=${comment.userId}">${username}</a></td>
-            <td><a style="text-decoration: none" href="http://localhost:8080/admin/books?activeId=${comment.bookId}">${bookTitle}</a></td>
-            <td style="max-width: 300px">${comment.text}</td>
-            <td>${loadStars(comment.rating)}</td>
-            <td>${comment.accepted ? "بله" : "خیر"}</td>
-            <td>
-                <button class="btn btn-sm btn-outline-success btn-accept-comment-${comment.accepted}" onclick="acceptComment(${comment.id})">
-                    <i class="fa fa-check"></i>
-                    پذیرفتن
-                </button>
-                <button onclick="deleteComment(${comment.id})" class="btn btn-sm btn-outline-danger">
-                    <i class="fa fa-trash"></i>
-                    حذف
-                </button>
-            </td>
+    function commentCardHTML(c) {
+        const pending = !c.accepted;
+        const name = pickName(c);
+        const blogTitle = pickBlogTitle(c);
+        return `
+            <article class="comment-card ${pending ? "is-pending" : ""}" data-id="${c.id}">
+                <div class="comment-avatar">${initial(name)}</div>
+                <div class="comment-body">
+                    <div class="comment-head">
+                        <span class="comment-name">${name}</span>
+                        <span class="comment-date">${pickDate(c)}</span>
+                        <span class="comment-status ${pending ? "pending" : "accepted"}">
+                            ${pending ? "در انتظار بررسی" : "تأیید شده"}
+                        </span>
+                    </div>
+                    ${blogTitle ? `<span class="comment-post-tag">روی «${blogTitle}»</span>` : ""}
+                    <p class="comment-text">${pickText(c)}</p>
+                </div>
+                <div class="comment-actions">
+                    ${pending ? `
+                        <button class="comment-action-btn accept-btn" title="تأیید دیدگاه" data-action="accept" data-id="${c.id}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 12.5 L9.5 18 L20 6"/>
+                            </svg>
+                        </button>
+                    ` : ""}
+                    <button class="comment-action-btn delete-btn" title="حذف دیدگاه" data-action="delete" data-id="${c.id}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 7h14 M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2 M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13 M10 11v6 M14 11v6"/>
+                        </svg>
+                    </button>
+                </div>
+            </article>
         `;
-        document.getElementById("table-body").appendChild(tr);
-        document.querySelectorAll(".btn-accept-comment-true").forEach(btn => btn.remove());
     }
 
-    function deleteComment(commentId) {
-        if (confirm("حذف نظر؟")) {
-            fetch("http://localhost:8080/comments/delete/" + commentId)
-                .then(() => loadComments());
+    function render() {
+        renderCounts();
+
+        const filtered = allComments.filter(c => {
+            if (currentFilter === "pending") return !c.accepted;
+            if (currentFilter === "accepted") return !!c.accepted;
+            return true;
+        });
+
+        skeletonEl.style.display = "none";
+
+        if (filtered.length === 0) {
+            listEl.style.display = "none";
+            emptyEl.style.display = "block";
+            return;
+        }
+
+        emptyEl.style.display = "none";
+        listEl.style.display = "flex";
+        listEl.style.flexDirection = "column";
+        listEl.style.gap = "16px";
+        listEl.innerHTML = filtered
+            .slice()
+            .sort((a, b) => (a.accepted === b.accepted ? 0 : a.accepted ? 1 : -1))
+            .map(commentCardHTML)
+            .join("");
+    }
+
+    async function loadData() {
+        try {
+            const [commentsRes, blogsRes] = await Promise.all([
+                fetch(`${API_BASE}/comments`).then(r => r.json()),
+                fetch(`${API_BASE}/blogs`).then(r => r.json()).catch(() => [])
+            ]);
+
+            blogsById = {};
+            (blogsRes || []).forEach(b => { blogsById[b.id] = b; });
+
+            allComments = commentsRes || [];
+            render();
+        } catch (err) {
+            skeletonEl.style.display = "none";
+            emptyEl.style.display = "block";
+            emptyEl.querySelector("p").innerText = "بارگذاری دیدگاه‌ها با خطا مواجه شد.";
         }
     }
 
-    function acceptComment(commentId) {
-        fetch("http://localhost:8080/comments/accept/" + commentId)
-            .then(() => loadComments());
+    async function acceptComment(id, btn) {
+        btn.disabled = true;
+        try {
+            await fetch(`${API_BASE}/comments/${id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ accepted: true })
+            });
+            const c = allComments.find(c => String(c.id) === String(id));
+            if (c) c.accepted = true;
+            render();
+        } catch (err) {
+            btn.disabled = false;
+        }
     }
 
-    loadComments();
+    async function deleteComment(id, card) {
+        if (!confirm("این دیدگاه برای همیشه حذف شود؟")) return;
+        card.classList.add("is-leaving");
+        try {
+            await fetch(`${API_BASE}/comments/${id}`, { method: "DELETE" });
+            setTimeout(() => {
+                allComments = allComments.filter(c => String(c.id) !== String(id));
+                render();
+            }, 320);
+        } catch (err) {
+            card.classList.remove("is-leaving");
+        }
+    }
+
+    listEl.addEventListener("click", (e) => {
+        const btn = e.target.closest(".comment-action-btn");
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const card = btn.closest(".comment-card");
+        if (btn.dataset.action === "accept") acceptComment(id, btn);
+        if (btn.dataset.action === "delete") deleteComment(id, card);
+    });
+
+    document.querySelectorAll(".filter-pill").forEach(pill => {
+        pill.addEventListener("click", () => {
+            document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("is-active"));
+            pill.classList.add("is-active");
+            currentFilter = pill.dataset.filter;
+            render();
+        });
+    });
+
+    loadData();
+
+    window.addEventListener("load", () => {
+        const loader = document.getElementById("page-loader");
+
+        const revealNow = () => {
+            document.querySelectorAll(".reveal").forEach((el, i) => {
+                const delay = i * 70;
+                el.style.transitionDelay = `${delay}ms`;
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => el.classList.add("visible"));
+                });
+                setTimeout(() => {
+                    el.style.transitionDelay = "";
+                }, delay + 850);
+            });
+        }
+
+        if (loader) {
+            setTimeout(() => {
+                loader.classList.add("is-hidden");
+                revealNow();
+            }, 450);
+        } else {
+            revealNow();
+        }
+    });
 </script>
 
-<script src="/bootstrap.bundle.min.js"></script>
 </body>
 </html>

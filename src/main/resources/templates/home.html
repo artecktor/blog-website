@@ -27,8 +27,8 @@
 
         <div class="header-right">
             <nav class="site-nav" aria-label="ناوبری اصلی">
-                <a href="#" class="nav-link is-active">تازه‌ها</a>
-                <a href="#" class="nav-link">جستارها</a>
+                <a href="#home" class="nav-link is-active">تازه‌ها</a>
+                <a href="#blogs" class="nav-link">بلاگ ها</a>
                 <a href="#" class="nav-link">یادداشت‌ها</a>
                 <a href="#" class="nav-link">درباره</a>
             </nav>
@@ -56,8 +56,8 @@
     </div>
 </header>
 <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="ناوبری موبایل">
-    <a href="#" class="mobile-nav-link is-active">تازه‌ها</a>
-    <a href="#" class="mobile-nav-link">جستارها</a>
+    <a href="#home" class="mobile-nav-link is-active">تازه‌ها</a>
+    <a href="#blogs" class="mobile-nav-link">بلاگ ها</a>
     <a href="#" class="mobile-nav-link">یادداشت‌ها</a>
     <a href="#" class="mobile-nav-link">درباره</a>
     <div class="mobile-nav-divider"></div>
@@ -70,11 +70,11 @@
 </nav>
 <main>
 
-    <section class="hero">
+    <section class="hero" id="home">
         <div class="hero-inner">
             <p class="eyebrow">دفتر چهارم — ایده‌های آهسته</p>
             <h1 class="hero-title">نوشتنی که عجله ندارد.</h1>
-            <p class="hero-sub">جستار و یادداشت درباره‌ی ساختن دقیق چیزها؛ نرم‌افزار، صنعتگری، و تصمیم‌های ساکتی که میان
+            <p class="hero-sub">بلاگ و یادداشت درباره‌ی ساختن دقیق چیزها؛ نرم‌افزار، صنعتگری، و تصمیم‌های ساکتی که میان
                 این دو جا می‌مانند. بدون هیاهو، وقتی آماده باشد منتشر می‌شود.</p>
         </div>
     </section>
@@ -82,17 +82,17 @@
     <section class="featured">
         <article class="featured-post">
             <div class="featured-text">
-                <p class="post-meta">جستار · ۱۲ دقیقه مطالعه</p>
+                <p class="post-meta">بلاگ · ۱۲ دقیقه مطالعه</p>
                 <h2 class="featured-title">چرا باید کندتر ساخت</h2>
                 <p class="featured-excerpt">سرعت، فضیلت پیش‌فرض دنیای نرم‌افزار است. اما بهترین کارها گاهی وقتی شکل
                     می‌گیرند که عمداً فشار انتشار سریع را کنار می‌گذاریم و می‌گذاریم یک مسئله بماند تا واقعاً آن را
                     بفهمیم.</p>
-                <a href="#" class="read-link"><span aria-hidden="true">←</span> خواندن جستار</a>
+                <a href="#" class="read-link"><span aria-hidden="true">←</span> خواندن بلاگ</a>
             </div>
         </article>
     </section>
 
-    <section class="posts">
+    <section id="blogs" class="posts">
         <div class="posts-header">
             <h2 class="section-title">نوشته‌های اخیر</h2>
             <span class="section-rule" aria-hidden="true"></span>
@@ -114,7 +114,7 @@
                 </svg>
                 درنگ
             </a>
-            <p class="footer-tagline">جستار و یادداشت درباره‌ی ساختن دقیق چیزها. بدون هیاهو، وقتی آماده باشد منتشر
+            <p class="footer-tagline">بلاگ و یادداشت درباره‌ی ساختن دقیق چیزها. بدون هیاهو، وقتی آماده باشد منتشر
                 می‌شود.</p>
             <div class="footer-social" aria-label="شبکه‌های اجتماعی">
                 <a href="#" class="social-link" aria-label="اینستاگرام">
@@ -146,7 +146,7 @@
         <div class="footer-col">
             <h3 class="footer-heading">بخش‌ها</h3>
             <a href="#" class="footer-link">تازه‌ها</a>
-            <a href="#" class="footer-link">جستارها</a>
+            <a href="#" class="footer-link">بلاگ ها</a>
             <a href="#" class="footer-link">یادداشت‌ها</a>
             <a href="#" class="footer-link">آرشیو</a>
         </div>
@@ -326,6 +326,88 @@
         if (cards.length > 1 && cards.length % 2 !== 0) {
             cards[cards.length - 1].classList.add("is-last-odd");
         }
+    }
+
+    /* ---------- Nav scroll-spy + sliding indicator ---------- */
+    const navLinks = [...document.querySelectorAll(".nav-link")];
+    const mobileNavLinksAll = [...document.querySelectorAll(".mobile-nav-link")];
+    const siteNav = document.querySelector(".site-nav");
+
+    let indicator = siteNav.querySelector(".nav-indicator");
+    if (!indicator) {
+        indicator = document.createElement("span");
+        indicator.className = "nav-indicator";
+        siteNav.appendChild(indicator);
+    }
+
+    function moveIndicator(link) {
+        if (!link) return;
+        const navRect = siteNav.getBoundingClientRect();
+        const rect = link.getBoundingClientRect();
+
+        indicator.style.width = `${rect.width}px`;
+        // right:0 anchors the indicator's right edge to nav's right edge.
+        // Shift it left by however far the link's right edge is from nav's right edge.
+        indicator.style.transform = `translateX(${-(navRect.right - rect.right)}px)`;
+        indicator.style.opacity = "1";
+    }
+
+    function setActiveLink(link) {
+        if (!link) return;
+        const href = link.getAttribute("href");
+
+        navLinks.forEach(l => l.classList.toggle("is-active", l.getAttribute("href") === href));
+        mobileNavLinksAll.forEach(l => l.classList.toggle("is-active", l.getAttribute("href") === href));
+
+        moveIndicator(document.querySelector(`.nav-link[href="${href}"]`));
+    }
+
+    function linkForSection(id) {
+        return navLinks.find(l => l.getAttribute("href") === `#${id}`);
+    }
+
+    const spySections = [...document.querySelectorAll("main section[id]")];
+
+    if (spySections.length) {
+        const spy = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const link = linkForSection(entry.target.id);
+                        if (link) setActiveLink(link);
+                    }
+                });
+            },
+            {
+                root: null,
+                rootMargin: "-45% 0px -50% 0px", // activates when section crosses mid-viewport band
+                threshold: 0
+            }
+        );
+        spySections.forEach(s => spy.observe(s));
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener("click", () => setActiveLink(link));
+    });
+
+    window.addEventListener("resize", () => {
+        const active = document.querySelector(".nav-link.is-active");
+        if (active) moveIndicator(active);
+    });
+
+    window.addEventListener("load", () => {
+        const active = document.querySelector(".nav-link.is-active") || navLinks[0];
+        setActiveLink(active);
+        setTimeout(initRevealAnimations, 100);
+        initCardTilt();
+    });
+
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+            const active = document.querySelector(".nav-link.is-active");
+            if (active) moveIndicator(active);
+        });
     }
 
     window.addEventListener("load", () => {
