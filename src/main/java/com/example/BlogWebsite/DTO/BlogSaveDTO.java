@@ -6,8 +6,8 @@ public class BlogSaveDTO {
     private int id;
     private String title;
     private String author;
+    private String content;
     private String description;
-    private int price;
     private String imageAddress;
 
     public String getTitle() {
@@ -22,6 +22,14 @@ public class BlogSaveDTO {
         return author;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public void setAuthor(String author) {this.author = author;}
 
     public String getDescription() {
@@ -30,12 +38,6 @@ public class BlogSaveDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getPrice() {return price;}
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public String getImageAddress() {
@@ -61,6 +63,7 @@ public class BlogSaveDTO {
         blog.setAuthor(this.author);
         blog.setDescription(this.description);
         blog.setImageAddress(this.imageAddress);
+        blog.setContent(this.content);
         return blog;
     }
 }

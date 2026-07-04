@@ -1,7 +1,10 @@
 package com.example.BlogWebsite.Service;
 
 import com.example.BlogWebsite.Model.ApplicationUser;
+import com.example.BlogWebsite.Model.Comment;
+import com.example.BlogWebsite.Model.Role;
 import com.example.BlogWebsite.Repository.ApplicationUserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +31,21 @@ public class ApplicationUserServiceIMPL implements ApplicationUserService {
     @Override
     public void update(ApplicationUser user) {
         applicationUserRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void promote(int id) {
+        ApplicationUser user = applicationUserRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+        user.setRole(Role.ADMIN);
+    }
+    @Transactional
+    @Override
+    public void demote(int id) {
+        ApplicationUser user = applicationUserRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+        user.setRole(Role.USER);
     }
 
     @Override

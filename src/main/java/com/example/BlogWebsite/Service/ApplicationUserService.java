@@ -11,6 +11,8 @@ public interface ApplicationUserService {
 
     void update(ApplicationUser user);
 
+    void promote(int id);
+    void demote(int id);
     ApplicationUser findByEmailAndPassword(String email, String password);
 
     ApplicationUser findById(int id);

@@ -29,4 +29,12 @@ public class ApplicationUserController {
     public List<ApplicationUser> findAll() {
         return applicationUserService.findAll();
     }
+    @GetMapping("/promote/{id}")
+    public void promote(@PathVariable int id) {
+        applicationUserService.promote(id);
+    }
+    @GetMapping("/demote/{id}")
+    public void demote(@PathVariable int id) {
+        applicationUserService.demote(id);
+    }
 }

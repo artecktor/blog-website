@@ -8,8 +8,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500;600;700&family=Vazirmatn:wght@400;500;600&display=swap"
           rel="stylesheet">
+    <link rel="stylesheet" href="/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/admin-style.css">
+    <link rel="stylesheet" href="/login-style.css">
 </head>
 <body>
 
@@ -37,8 +39,8 @@
             <span class="admin-badge">مدیریت</span>
         </a>
 
-        <a href="http://localhost:8080/admin" class="admin-exit-link">
-            <span>بازگشت به پنل</span>
+        <a href="http://localhost:8080" class="admin-exit-link">
+            <span>بازگشت به سایت</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                 <path d="M15 5 L8 12 L15 19"/>
             </svg>
@@ -55,33 +57,213 @@
     </section>
 
     <section class="comments-toolbar reveal">
-        <button class="filter-pill is-active" data-filter="all">
-            همه <span class="filter-pill-count" id="count-all">۰</span>
-        </button>
-        <button class="filter-pill" data-filter="pending">
-            در انتظار بررسی <span class="filter-pill-count" id="count-pending">۰</span>
-        </button>
-        <button class="filter-pill" data-filter="accepted">
-            تأیید شده <span class="filter-pill-count" id="count-accepted">۰</span>
-        </button>
+        <div class="filter-group">
+            <button onclick="loadComments(1)" id="comments-all" class="filter-pill is-active" data-filter="all">
+                همه <span class="filter-pill-count" id="count-all">۳</span>
+            </button>
+            <button onclick="loadComments(2)" id="comments-unchecked" class="filter-pill" data-filter="pending">
+                در انتظار بررسی <span class="filter-pill-count" id="count-pending">۲</span>
+            </button>
+            <button onclick="loadComments(3)" id="comments-checked" class="filter-pill" data-filter="accepted">
+                تأیید شده <span class="filter-pill-count" id="count-accepted">۱</span>
+            </button>
+        </div>
     </section>
 
-    <section class="comments-wrap reveal" id="comments-wrap">
-        <div class="comments-skeleton" id="comments-skeleton">
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
+    <section class="bulk-bar reveal">
+        <div class="bulk-bar-inner" id="bulk-bar">
+            <span id="bulk-count">۰ دیدگاه انتخاب شده</span>
+            <div class="bulk-bar-actions">
+                <button class="bulk-btn accept" id="bulk-accept">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M4 12.5 L9.5 18 L20 6"/>
+                    </svg>
+                    تأیید
+                </button>
+                <button class="bulk-btn delete" id="bulk-delete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M5 7h14 M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2 M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"/>
+                    </svg>
+                    حذف
+                </button>
+                <button class="bulk-btn clear" id="bulk-clear">انصراف</button>
+            </div>
         </div>
-        <div id="comments-list" style="display:none;"></div>
-        <div class="comments-empty" id="comments-empty" style="display:none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-                <path d="M4 5.5 h16 a1 1 0 0 1 1 1 v9 a1 1 0 0 1 -1 1 H9 l-4.5 4 v-4 H4 a1 1 0 0 1 -1 -1 v-9 a1 1 0 0 1 1 -1 Z"/>
-            </svg>
-            <p>دیدگاهی برای نمایش وجود ندارد.</p>
+    </section>
+
+    <section class="comments-wrap reveal">
+        <div class="comments-table-shell">
+
+            <div class="comments-skeleton" id="comments-skeleton" style="display:none;">
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+            </div>
+
+            <div class="comments-table-scroll" id="table-scroll">
+                <table class="comments-table">
+                    <thead>
+                    <tr>
+                        <th class="col-check"><input type="checkbox" class="select-all-check" id="select-all"></th>
+                        <th class="col-author">نویسنده</th>
+                        <th class="col-comment">دیدگاه</th>
+                        <th class="col-post">متن</th>
+                        <th class="col-date">بلاگ</th>
+                        <th class="col-status">تاریخ</th>
+                        <th class="col-actions">وضعیت</th>
+                    </tr>
+                    </thead>
+                    <tbody id="comments-tbody">
+                    <tr class="is-pending" data-id="1">
+                        <td class="col-check"><input type="checkbox" class="row-check" data-id="1"></td>
+                        <td>
+                            <div class="cell-author">
+                                <span class="author-avatar">س</span>
+                                <span class="author-name">سارا محمدی</span>
+                            </div>
+                        </td>
+                        <td class="cell-comment">
+                            <p class="comment-text-cell">مقاله فوق‌العاده‌ای بود، خیلی چیزهای جدید یاد گرفتم. لطفاً
+                                بیشتر در این مورد بنویسید.</p>
+                        </td>
+                        <td class="cell-post">طراحی رابط کاربری مدرن</td>
+                        <td class="cell-date">۱۴۰۵/۰۴/۰۷</td>
+                        <td><span class="status-badge pending">در انتظار</span></td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button class="comment-action-btn accept-btn" title="تأیید دیدگاه" data-action="accept"
+                                        data-id="1">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 12.5 L9.5 18 L20 6"/>
+                                    </svg>
+                                </button>
+                                <button class="comment-action-btn delete-btn" title="حذف دیدگاه" data-action="delete"
+                                        data-id="1">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 7h14 M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2 M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13 M10 11v6 M14 11v6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="2">
+                        <td class="col-check"><input type="checkbox" class="row-check" data-id="2"></td>
+                        <td>
+                            <div class="cell-author">
+                                <span class="author-avatar">ع</span>
+                                <span class="author-name">علی رضایی</span>
+                            </div>
+                        </td>
+                        <td class="cell-comment">
+                            <p class="comment-text-cell">ممنون از توضیحات کامل و شفاف.</p>
+                        </td>
+                        <td class="cell-post">شروع کار با جاوااسکریپت</td>
+                        <td class="cell-date">۱۴۰۵/۰۳/۳۰</td>
+                        <td><span class="status-badge accepted">تأیید شده</span></td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button class="comment-action-btn delete-btn" title="حذف دیدگاه" data-action="delete"
+                                        data-id="2">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 7h14 M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2 M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13 M10 11v6 M14 11v6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="is-pending" data-id="3">
+                        <td class="col-check"><input type="checkbox" class="row-check" data-id="3"></td>
+                        <td>
+                            <div class="cell-author">
+                                <span class="author-avatar">ن</span>
+                                <span class="author-name">نگار احمدی</span>
+                            </div>
+                        </td>
+                        <td class="cell-comment">
+                            <p class="comment-text-cell">من با بخش سوم مقاله کمی مخالفم، به نظرم باید منابع بیشتری ذکر
+                                می‌شد.</p>
+                        </td>
+                        <td class="cell-post">طراحی رابط کاربری مدرن</td>
+                        <td class="cell-date">۱۴۰۵/۰۳/۲۵</td>
+                        <td><span class="status-badge pending">در انتظار</span></td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button class="comment-action-btn accept-btn" title="تأیید دیدگاه" data-action="accept"
+                                        data-id="3">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 12.5 L9.5 18 L20 6"/>
+                                    </svg>
+                                </button>
+                                <button class="comment-action-btn delete-btn" title="حذف دیدگاه" data-action="delete"
+                                        data-id="3">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 7h14 M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2 M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13 M10 11v6 M14 11v6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="comments-empty" id="comments-empty" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                    <path d="M4 5.5 h16 a1 1 0 0 1 1 1 v9 a1 1 0 0 1 -1 1 H9 l-4.5 4 v-4 H4 a1 1 0 0 1 -1 -1 v-9 a1 1 0 0 1 1 -1 Z"/>
+                </svg>
+                <p>دیدگاهی برای نمایش وجود ندارد.</p>
+            </div>
+
         </div>
     </section>
 
 </main>
+
+<div class="glass-overlay" id="glass-alert-overlay">
+    <div class="glass-alert">
+        <button class="glass-alert-close" type="button"
+                id="glass-alert-close">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+
+                <path d="M5 5 L19 19 M19 5 L5 19"/>
+            </svg>
+        </button>
+
+        <h3 class="glass-alert-title"
+            id="glass-alert-title">
+        </h3>
+
+        <p class="glass-alert-text"
+           id="glass-alert-text">
+        </p>
+
+        <div style="display:flex;gap:10px;justify-content:center">
+
+            <button class="btn btn-primary"
+                    id="confirm-delete-btn">
+                حذف
+            </button>
+
+            <button class="bulk-btn clear"
+                    id="cancel-delete-btn">
+                انصراف
+            </button>
+
+        </div>
+    </div>
+</div>
 
 <footer class="site-footer admin-footer">
     <div class="footer-bottom admin-footer-bottom">
@@ -96,185 +278,114 @@
 </footer>
 
 <script>
-    const API_BASE = "http://localhost:8080";
-    let allComments = [];
-    let blogsById = {};
-    let currentFilter = "all";
 
-    const listEl = document.getElementById("comments-list");
-    const skeletonEl = document.getElementById("comments-skeleton");
-    const emptyEl = document.getElementById("comments-empty");
-
-    const faNum = (n) => (n ?? 0).toLocaleString("fa-IR");
-
-    function pickText(c) {
-        return c.comment ?? c.text ?? c.content ?? c.body ?? "";
-    }
-    function pickName(c) {
-        return c.name ?? c.author ?? c.username ?? (c.user && c.user.name) ?? "کاربر مهمان";
-    }
-    function pickDate(c) {
-        const raw = c.createdAt ?? c.date ?? c.created_at ?? null;
-        if (!raw) return "";
-        try {
-            return new Date(raw).toLocaleDateString("fa-IR", { year: "numeric", month: "long", day: "numeric" });
-        } catch (e) {
-            return "";
+    async function loadComments(phase) {
+        await updateButtonData();
+        document.getElementById("comments-tbody").innerHTML = "";
+        const allComments = await fetch("http://localhost:8080/comments").then((res) => res.json());
+        let desiredComments = [];
+        switch (phase) {
+            case 1:
+                document.getElementById("comments-all").classList.add("is-active");
+                document.getElementById("comments-unchecked").classList.remove("is-active");
+                document.getElementById("comments-checked").classList.remove("is-active");
+                desiredComments = allComments;
+                break;
+            case 2:
+                document.getElementById("comments-all").classList.remove("is-active");
+                document.getElementById("comments-unchecked").classList.add("is-active");
+                document.getElementById("comments-checked").classList.remove("is-active");
+                desiredComments = allComments.filter(
+                    comment => !comment.accepted
+                );
+                break;
+            case 3:
+                document.getElementById("comments-all").classList.remove("is-active");
+                document.getElementById("comments-unchecked").classList.remove("is-active");
+                document.getElementById("comments-checked").classList.add("is-active");
+                desiredComments = allComments.filter(
+                    comment => comment.accepted
+                );
+                break;
+        }
+        document.getElementById("comments-empty").style.display =
+            desiredComments.length ? "none" : "block";
+        for (let i = 0; i < desiredComments.length; i++) {
+            await convertToHTML(desiredComments[i]);
         }
     }
-    function pickBlogTitle(c) {
-        const id = c.blogId ?? c.blog_id ?? (c.blog && c.blog.id);
-        if (id && blogsById[id]) return blogsById[id].title ?? blogsById[id].name;
-        return c.blogTitle ?? null;
-    }
-    function initial(name) {
-        return (name || "?").trim().charAt(0).toUpperCase();
-    }
 
-    function renderCounts() {
-        const pendingCount = allComments.filter(c => !c.accepted).length;
-        const acceptedCount = allComments.filter(c => c.accepted).length;
-        document.getElementById("count-all").innerText = faNum(allComments.length);
-        document.getElementById("count-pending").innerText = faNum(pendingCount);
-        document.getElementById("count-accepted").innerText = faNum(acceptedCount);
-    }
-
-    function commentCardHTML(c) {
-        const pending = !c.accepted;
-        const name = pickName(c);
-        const blogTitle = pickBlogTitle(c);
-        return `
-            <article class="comment-card ${pending ? "is-pending" : ""}" data-id="${c.id}">
-                <div class="comment-avatar">${initial(name)}</div>
-                <div class="comment-body">
-                    <div class="comment-head">
-                        <span class="comment-name">${name}</span>
-                        <span class="comment-date">${pickDate(c)}</span>
-                        <span class="comment-status ${pending ? "pending" : "accepted"}">
-                            ${pending ? "در انتظار بررسی" : "تأیید شده"}
-                        </span>
-                    </div>
-                    ${blogTitle ? `<span class="comment-post-tag">روی «${blogTitle}»</span>` : ""}
-                    <p class="comment-text">${pickText(c)}</p>
-                </div>
-                <div class="comment-actions">
-                    ${pending ? `
-                        <button class="comment-action-btn accept-btn" title="تأیید دیدگاه" data-action="accept" data-id="${c.id}">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 12.5 L9.5 18 L20 6"/>
-                            </svg>
-                        </button>
-                    ` : ""}
-                    <button class="comment-action-btn delete-btn" title="حذف دیدگاه" data-action="delete" data-id="${c.id}">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 7h14 M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2 M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13 M10 11v6 M14 11v6"/>
-                        </svg>
-                    </button>
-                </div>
-            </article>
-        `;
-    }
-
-    function render() {
-        renderCounts();
-
-        const filtered = allComments.filter(c => {
-            if (currentFilter === "pending") return !c.accepted;
-            if (currentFilter === "accepted") return !!c.accepted;
-            return true;
+    async function convertToHTML(comment) {
+        let user = await fetch("http://localhost:8080/users/" + comment.userId).then((res) => res.json());
+        let blog = await fetch("http://localhost:8080/blogs/" + comment.blogId).then((res) => res.json());
+        const date = new Date(comment.updatedAt);
+        const persianFormatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+            timeZone: 'Asia/Tehran',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
         });
-
-        skeletonEl.style.display = "none";
-
-        if (filtered.length === 0) {
-            listEl.style.display = "none";
-            emptyEl.style.display = "block";
-            return;
-        }
-
-        emptyEl.style.display = "none";
-        listEl.style.display = "flex";
-        listEl.style.flexDirection = "column";
-        listEl.style.gap = "16px";
-        listEl.innerHTML = filtered
-            .slice()
-            .sort((a, b) => (a.accepted === b.accepted ? 0 : a.accepted ? 1 : -1))
-            .map(commentCardHTML)
-            .join("");
+        const formattedDate = persianFormatter.format(date);
+        let row = `
+        <tr class="${comment.accepted ? '' : 'is-pending'}" data-id="${comment.id}">
+                        <td class="col-check"><input type="checkbox" class="row-check" data-id="${comment.id}"></td>
+                        <td class="cell-author-td">
+                            <div class="cell-author">
+                                <span class="author-avatar">${user.username[0].toUpperCase()}</span>
+                                <a href="http://localhost:8080/admin/users?targetId=${user.id}" class="author-name link-underline">${user.username}</a>
+                            </div>
+                        </td>
+                        <td class="cell-comment">
+                            <p class="comment-text-cell">${comment.text}</p>
+                        </td>
+                        <td class="cell-post"><a class="link-underline" href="http://localhost:8080/admin/blogs?targetId=${user.id}">${blog.title}</a></td>
+                        <td class="cell-date">${formattedDate}</td>
+                        <td class="cell-status"><span class="status-badge ${comment.accepted ? '' : 'pending'}">${comment.accepted ? 'تأیید شده' : 'در انتظار'}</span></td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button onclick="acceptComment(${comment.id})" class="comment-action-btn accept-btn ${comment.accepted ? 'd-none' : ''}" title="تأیید دیدگاه" data-action="accept"
+                                        data-id="1">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 12.5 L9.5 18 L20 6"/>
+                                    </svg>
+                                </button>
+                                <button onclick="showDeleteAlert(${comment.id})" class="comment-action-btn delete-btn" title="حذف دیدگاه" data-action="delete"
+                                        data-id="1">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 7h14 M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2 M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13 M10 11v6 M14 11v6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+        `
+        document.getElementById("comments-tbody").innerHTML += row;
     }
 
-    async function loadData() {
-        try {
-            const [commentsRes, blogsRes] = await Promise.all([
-                fetch(`${API_BASE}/comments`).then(r => r.json()),
-                fetch(`${API_BASE}/blogs`).then(r => r.json()).catch(() => [])
-            ]);
-
-            blogsById = {};
-            (blogsRes || []).forEach(b => { blogsById[b.id] = b; });
-
-            allComments = commentsRes || [];
-            render();
-        } catch (err) {
-            skeletonEl.style.display = "none";
-            emptyEl.style.display = "block";
-            emptyEl.querySelector("p").innerText = "بارگذاری دیدگاه‌ها با خطا مواجه شد.";
-        }
+    function acceptComment(commentId) {
+        fetch("http://localhost:8080/comments/accept/" + commentId)
+            .then(() => loadComments(1));
     }
 
-    async function acceptComment(id, btn) {
-        btn.disabled = true;
-        try {
-            await fetch(`${API_BASE}/comments/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ accepted: true })
-            });
-            const c = allComments.find(c => String(c.id) === String(id));
-            if (c) c.accepted = true;
-            render();
-        } catch (err) {
-            btn.disabled = false;
-        }
+    async function updateButtonData() {
+        const comments = await (
+            await fetch("http://localhost:8080/comments")
+        ).json();
+        document.getElementById("count-all").innerText =
+            comments.length.toLocaleString("fa-IR");
+        document.getElementById("count-pending").innerText =
+            comments.filter(comment => !comment.accepted).length.toLocaleString("fa-IR");
+        document.getElementById("count-accepted").innerText =
+            comments.filter(comment => comment.accepted).length.toLocaleString("fa-IR");
     }
-
-    async function deleteComment(id, card) {
-        if (!confirm("این دیدگاه برای همیشه حذف شود؟")) return;
-        card.classList.add("is-leaving");
-        try {
-            await fetch(`${API_BASE}/comments/${id}`, { method: "DELETE" });
-            setTimeout(() => {
-                allComments = allComments.filter(c => String(c.id) !== String(id));
-                render();
-            }, 320);
-        } catch (err) {
-            card.classList.remove("is-leaving");
-        }
-    }
-
-    listEl.addEventListener("click", (e) => {
-        const btn = e.target.closest(".comment-action-btn");
-        if (!btn) return;
-        const id = btn.dataset.id;
-        const card = btn.closest(".comment-card");
-        if (btn.dataset.action === "accept") acceptComment(id, btn);
-        if (btn.dataset.action === "delete") deleteComment(id, card);
-    });
-
-    document.querySelectorAll(".filter-pill").forEach(pill => {
-        pill.addEventListener("click", () => {
-            document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("is-active"));
-            pill.classList.add("is-active");
-            currentFilter = pill.dataset.filter;
-            render();
-        });
-    });
-
-    loadData();
 
     window.addEventListener("load", () => {
         const loader = document.getElementById("page-loader");
-
         const revealNow = () => {
             document.querySelectorAll(".reveal").forEach((el, i) => {
                 const delay = i * 70;
@@ -287,7 +398,6 @@
                 }, delay + 850);
             });
         }
-
         if (loader) {
             setTimeout(() => {
                 loader.classList.add("is-hidden");
@@ -297,6 +407,54 @@
             revealNow();
         }
     });
+
+    let pendingDeleteId = null;
+
+    function showDeleteAlert(commentId) {
+        pendingDeleteId = commentId;
+
+        document.getElementById("glass-alert-title")
+            .innerText = "حذف دیدگاه";
+
+        document.getElementById("glass-alert-text")
+            .innerText = "آیا مطمئن هستید که می‌خواهید این دیدگاه را حذف کنید؟";
+
+        document.getElementById("glass-alert-overlay")
+            .classList.add("is-open");
+    }
+
+    function hideGlassAlert() {
+        document.getElementById("glass-alert-overlay")
+            .classList.remove("is-open");
+
+        pendingDeleteId = null;
+    }
+
+    document.getElementById("cancel-delete-btn")
+        .addEventListener("click", hideGlassAlert);
+
+    document.getElementById("glass-alert-close")
+        .addEventListener("click", hideGlassAlert);
+
+    document.getElementById("confirm-delete-btn")
+        .addEventListener("click", async () => {
+
+            if (!pendingDeleteId) return;
+
+            await fetch(
+                "http://localhost:8080/comments/delete/" + pendingDeleteId,
+                {
+                    method: "GET"
+                }
+            );
+
+            hideGlassAlert();
+
+            await loadComments(1);
+            await updateButtonData();
+        });
+
+    loadComments(1);
 </script>
 
 </body>

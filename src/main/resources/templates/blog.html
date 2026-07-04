@@ -92,6 +92,7 @@
         </div>
 
         <div class="post-hero">
+            <div class="post-hero-glow" id="post-hero-glow" aria-hidden="true"></div>
             <img id="post-image" alt="">
         </div>
 
@@ -327,6 +328,7 @@
                 document.getElementById("post-title").innerText = blog.title;
                 document.getElementById("post-lead").innerText = blog.description;
                 document.getElementById("post-image").src = blog.imageAddress;
+                document.getElementById("post-hero-glow").style.backgroundImage = `url('${blog.imageAddress}')`;
                 document.getElementById("post-body").innerText = blog.content;
             })
     }
@@ -345,7 +347,7 @@
             })
     }
     function centerOddCard() {
-        const cards = document.querySelectorAll(".post-card");
+        const cards = document.querySelectorAll(".post-card-wrap");
 
         // remove previous state
         cards.forEach(card => {
@@ -358,19 +360,35 @@
         }
     }
     function convertToHTML(blog) {
-        let readingTime = Math.ceil(blog.content.length / 1200);
+        let readingTime = Math.ceil(blog.content.length / 1200).toLocaleString("fa-IR");
         let card = `
+    <div class="post-card-wrap">
+        <div class="post-card-glow" style="background-image:url('${blog.imageAddress}')" aria-hidden="true"></div>
+        <div class="post-card-mask" aria-hidden="true"></div>
         <article class="post-card">
                 <div class="post-thumb" aria-hidden="true"><img src="${blog.imageAddress}" alt=""></div>
                 <div class="post-card-body">
-                    <p class="post-meta"><span>${blog.author}</span><span> · ${readingTime.toLocaleString("fa-IR")} دقیقه مطالعه</span></p>
+                    <p class="post-meta"><span>${blog.author}</span><span> · ${readingTime} دقیقه مطالعه</span></p>
                     <h3 class="post-title">${blog.title}</h3>
                     <p class="post-excerpt">${blog.description}</p>
                     <a href="http://localhost:8080/blog?id=${blog.id}" class="read-link"><span aria-hidden="true">←</span> ادامه مطلب</a>
                 </div>
             </article>
-        `
+    </div>
+    `
         document.getElementById("blog-section").innerHTML += card;
+    }
+
+    function fadeInCards() {
+        const cards = document.querySelectorAll(".post-card-wrap:not(.card-loaded)");
+        cards.forEach((card, i) => {
+            card.style.animationDelay = `${i * 60}ms`;
+            card.classList.add("card-loaded");
+
+            card.addEventListener("animationend", () => {
+                card.style.animation = "none";
+            }, { once: true });
+        });
     }
 
     function loadStars(rating) {
@@ -564,7 +582,6 @@
         .post-body,
         .post-page-footer,
         .reviews-panel,
-        .post-card,
         .review-card,
         .footer-main
     `));

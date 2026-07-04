@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class PageController {
     private final CommentService commentService;
-    BlogService blogService;
+    private final BlogService blogService;
     ApplicationUserService applicationUserService;
 
     public PageController(BlogService blogService, ApplicationUserService applicationUserService, CommentService commentService) {
@@ -70,11 +70,17 @@ public class PageController {
     }
 
     @PostMapping("/users")
-    public String save(UserSaveDTO userSaveDTO) {
+    public String saveUser(UserSaveDTO userSaveDTO) {
         ApplicationUser user = userSaveDTO.convertToApplicationUser();
         user.setRole(Role.USER);
         applicationUserService.save(user);
         return "home";
+    }
+    @PostMapping("/blogs")
+    public String saveBlog(BlogSaveDTO blogSaveDTO) {
+        Blog blog = blogSaveDTO.convertToBlog();
+        blogService.save(blog);
+        return "adminBlog";
     }
 
     @PostMapping("/login")
@@ -113,6 +119,14 @@ public class PageController {
     @GetMapping("/admin/comments")
     public String adminComments() {
         return "adminComment";
+    }
+    @GetMapping("/admin/blogs")
+    public String adminBlogs() {
+        return "adminBlog";
+    }
+    @GetMapping("/admin/blog-edit")
+    public String adminBlogEdit() {
+        return "adminBlogEdit";
     }
 
     @GetMapping("/admin")

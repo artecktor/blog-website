@@ -17,7 +17,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public Comment saveComment(@RequestBody CommentSaveDTO commentSaveDTO) { // برای ثبت نظرات مجبور شدم که تغییرش بدم
+    public Comment saveComment(@RequestBody CommentSaveDTO commentSaveDTO) {
         Comment comment = commentSaveDTO.convertToComment();
         commentService.save(comment);
         return comment;

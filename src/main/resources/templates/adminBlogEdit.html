@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ویرایش بلاگ — درنگ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500;600;700&family=Vazirmatn:wght@400;500;600&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/admin-style.css">
+    <link rel="stylesheet" href="/login-style.css">
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+</div>
+
+<header class="site-header">
+    <div class="header-inner admin-header-inner">
+        <a href="http://localhost:8080/admin" class="logo">
+            <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+            </svg>
+            درنگ
+            <span class="admin-badge">مدیریت</span>
+        </a>
+
+        <a href="http://localhost:8080/admin/blogs" class="admin-exit-link">
+            <span>بازگشت به لیست بلاگ‌ها</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M15 5 L8 12 L15 19"/>
+            </svg>
+        </a>
+    </div>
+</header>
+
+<main>
+
+    <!-- ================= EDITOR PANEL ================= -->
+    <section class="editor-panel">
+        <div class="editor-panel-inner">
+
+            <form id="blog-form" action="http://localhost:8080/blogs" method="post">
+                <input type="hidden" name="id" id="f-id">
+
+                <div class="editor-panel-head">
+                    <h2 class="section-title" id="editor-heading">بلاگ جدید</h2>
+                    <div class="editor-panel-actions">
+                        <button class="btn btn-ghost" type="button" id="toggle-preview-btn">
+                            پنهان کردن پیش‌نمایش
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                            ذخیره بلاگ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="editor-fields">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="f-title">عنوان</label>
+                            <input type="text" id="f-title" name="title" placeholder="عنوان بلاگ" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="f-author">نویسنده</label>
+                            <input type="text" id="f-author" name="author" placeholder="نام نویسنده" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="f-image">آدرس تصویر</label>
+                        <input type="text" id="f-image" name="imageAddress" dir="ltr" placeholder="https://...">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="f-description">توضیح کوتاه</label>
+                        <textarea id="f-description" name="description" rows="2" placeholder="یک یا دو جمله معرفی بلاگ"></textarea>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="f-content">متن کامل بلاگ</label>
+                        <textarea id="f-content" name="content" rows="10" placeholder="متن کامل بلاگ را اینجا بنویسید…" required></textarea>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </section>
+
+    <!-- ================= LIVE PREVIEW (mirrors blog.html) ================= -->
+    <div id="preview-wrap">
+        <p class="preview-label">پیش‌نمایش زنده — دقیقاً همانی که کاربران می‌بینند</p>
+
+        <article class="post-page">
+            <div class="post-page-head">
+                <p class="post-meta">
+                    <span id="pv-author">نویسنده</span>
+                    <span> · </span>
+                    <span id="pv-time">۰</span>
+                    <span> دقیقه مطالعه</span>
+                </p>
+                <h1 class="post-page-title" id="pv-title">عنوان بلاگ</h1>
+                <p class="post-page-lead" id="pv-lead">توضیح کوتاه بلاگ اینجا نمایش داده می‌شود.</p>
+            </div>
+
+            <div class="post-hero">
+                <img id="pv-image" alt="" src="">
+            </div>
+
+            <div class="post-body" id="pv-body">
+                <p class="post-body-placeholder">متن بلاگ را در فرم بالا بنویسید تا اینجا نمایش داده شود.</p>
+            </div>
+        </article>
+    </div>
+
+</main>
+
+<footer class="site-footer admin-footer">
+    <div class="footer-bottom admin-footer-bottom">
+        <div class="admin-footer-brand">
+            <svg class="logo-mark small" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+            </svg>
+            <span>پنل مدیریت درنگ</span>
+        </div>
+        <p>© ۱۴۰۵ درنگ. دسترسی محدود به مدیران سایت.</p>
+    </div>
+</footer>
+
+<script>
+    const editId = new URLSearchParams(window.location.search).get("id");
+
+    const fTitle = document.getElementById("f-title");
+    const fAuthor = document.getElementById("f-author");
+    const fImage = document.getElementById("f-image");
+    const fDescription = document.getElementById("f-description");
+    const fContent = document.getElementById("f-content");
+
+    function updatePreview() {
+        document.getElementById("pv-title").innerText = fTitle.value || "عنوان بلاگ";
+        document.getElementById("pv-author").innerText = fAuthor.value || "نویسنده";
+        document.getElementById("pv-lead").innerText = fDescription.value || "توضیح کوتاه بلاگ اینجا نمایش داده می‌شود.";
+        document.getElementById("pv-image").src = fImage.value || "";
+
+        const content = fContent.value;
+        document.getElementById("pv-body").innerText = content ||
+            "متن بلاگ را در فرم بالا بنویسید تا اینجا نمایش داده شود.";
+
+        const readingTime = content ? Math.ceil(content.length / 1200) : 0;
+        document.getElementById("pv-time").innerText = readingTime.toLocaleString("fa-IR");
+    }
+
+    [fTitle, fAuthor, fImage, fDescription, fContent].forEach(el =>
+        el.addEventListener("input", updatePreview)
+    );
+
+    async function loadExistingBlog() {
+        if (!editId) {
+            document.getElementById("f-id").disabled = true;
+            return;
+        }
+
+        document.getElementById("editor-heading").innerText = "ویرایش بلاگ";
+        document.getElementById("f-id").value = editId;
+
+        const blog = await fetch("http://localhost:8080/blogs/" + editId).then(res => res.json());
+
+        fTitle.value = blog.title || "";
+        fAuthor.value = blog.author || "";
+        fImage.value = blog.imageAddress || "";
+        fDescription.value = blog.description || "";
+        fContent.value = blog.content || "";
+
+        updatePreview();
+    }
+
+    document.getElementById("toggle-preview-btn").addEventListener("click", (e) => {
+        const wrap = document.getElementById("preview-wrap");
+        const hidden = wrap.classList.toggle("is-hidden");
+        e.target.innerText = hidden ? "نمایش پیش‌نمایش" : "پنهان کردن پیش‌نمایش";
+    });
+
+    loadExistingBlog();
+    updatePreview();
+</script>
+
+</body>
+</html>
