@@ -9,8 +9,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500;600;700&family=Vazirmatn:wght@400;500;600&display=swap"
           rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem("derang-theme");
+                var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                document.documentElement.setAttribute("data-theme", theme);
+            } catch (e) {
+            }
+        })();
+    </script>
 </head>
 <body>
+<div class="scroll-progress" id="scroll-progress"></div>
 <div class="ambient" aria-hidden="true">
     <span class="blob blob-a"></span>
     <span class="blob blob-b"></span>
@@ -29,9 +40,30 @@
             <nav class="site-nav" aria-label="ناوبری اصلی">
                 <a href="#home" class="nav-link is-active">تازه‌ها</a>
                 <a href="#blogs" class="nav-link">بلاگ ها</a>
-                <a href="#" class="nav-link">یادداشت‌ها</a>
-                <a href="#" class="nav-link">درباره</a>
+                <a href="#notes" class="nav-link">یادداشت‌ها</a>
+                <a href="#about" class="nav-link">درباره</a>
             </nav>
+
+            <button class="search-trigger" type="button" id="search-trigger" aria-label="جستجوی سریع">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="M21 21l-4.3-4.3"/>
+                </svg>
+                <span class="search-trigger-label">جستجو</span>
+                <kbd class="search-kbd">⌘K</kbd>
+            </button>
+
+            <button class="theme-toggle" type="button" id="theme-toggle" aria-label="تغییر پوسته">
+                <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.7">
+                    <circle cx="12" cy="12" r="4.2"/>
+                    <path d="M12 2.5v2.6M12 18.9v2.6M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/>
+                </svg>
+                <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.7">
+                    <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/>
+                </svg>
+            </button>
 
             <button class="hamburger-btn" type="button" id="hamburger-btn" aria-label="باز کردن منو"
                     aria-expanded="false" aria-controls="mobile-nav-panel">
@@ -56,10 +88,18 @@
     </div>
 </header>
 <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="ناوبری موبایل">
+    <button class="mobile-nav-link mobile-search-link" type="button" id="mobile-search-trigger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             style="width:16px;height:16px;margin-inline-end:8px;">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="M21 21l-4.3-4.3"/>
+        </svg>
+        جستجو
+    </button>
     <a href="#home" class="mobile-nav-link is-active">تازه‌ها</a>
     <a href="#blogs" class="mobile-nav-link">بلاگ ها</a>
-    <a href="#" class="mobile-nav-link">یادداشت‌ها</a>
-    <a href="#" class="mobile-nav-link">درباره</a>
+    <a href="#notes" class="mobile-nav-link">یادداشت‌ها</a>
+    <a href="#about" class="mobile-nav-link">درباره</a>
     <div class="mobile-nav-divider"></div>
     <button class="mobile-nav-cta btn-ghost-mobile" type="button"
             onclick="window.location.href='http://localhost:8080/login'">ورود
@@ -71,25 +111,43 @@
 <main>
 
     <section class="hero" id="home">
+        <div class="cursor-glow" id="cursor-glow" aria-hidden="true"></div>
         <div class="hero-inner">
             <p class="eyebrow">دفتر چهارم — ایده‌های آهسته</p>
             <h1 class="hero-title">نوشتنی که عجله ندارد.</h1>
             <p class="hero-sub">بلاگ و یادداشت درباره‌ی ساختن دقیق چیزها؛ نرم‌افزار، صنعتگری، و تصمیم‌های ساکتی که میان
                 این دو جا می‌مانند. بدون هیاهو، وقتی آماده باشد منتشر می‌شود.</p>
+            <a href="#blogs" class="scroll-cue" aria-label="پیمایش به پایین">
+                <span class="scroll-cue-label">پیمایش به پایین</span>
+                <span class="scroll-cue-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M12 4v14M6 13l6 6 6-6"/>
+                    </svg>
+                </span>
+            </a>
         </div>
     </section>
 
-    <section class="featured">
-        <article class="featured-post">
-            <div class="featured-text">
-                <p class="post-meta">بلاگ · ۱۲ دقیقه مطالعه</p>
-                <h2 class="featured-title">چرا باید کندتر ساخت</h2>
-                <p class="featured-excerpt">سرعت، فضیلت پیش‌فرض دنیای نرم‌افزار است. اما بهترین کارها گاهی وقتی شکل
-                    می‌گیرند که عمداً فشار انتشار سریع را کنار می‌گذاریم و می‌گذاریم یک مسئله بماند تا واقعاً آن را
-                    بفهمیم.</p>
-                <a href="#" class="read-link"><span aria-hidden="true">←</span> خواندن بلاگ</a>
+    <section class="stats" id="stats" aria-label="آمار درنگ">
+        <div class="stats-inner">
+            <div class="stat-item">
+                <span class="stat-number" data-target="48" data-suffix="+">۰</span>
+                <span class="stat-label">نوشته منتشر شده</span>
             </div>
-        </article>
+            <div class="stat-item">
+                <span class="stat-number" data-target="12600" data-suffix="+">۰</span>
+                <span class="stat-label">خواننده ماهانه</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="3" data-suffix="">۰</span>
+                <span class="stat-label">سال قدم زدن آهسته</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="100" data-suffix="٪">۰</span>
+                <span class="stat-label">دقت در جزئیات</span>
+            </div>
+        </div>
     </section>
 
     <section id="blogs" class="posts">
@@ -99,6 +157,90 @@
         </div>
 
         <div id="blog-section" class="post-grid">
+        </div>
+    </section>
+
+    <section id="notes" class="notes">
+        <div class="posts-header">
+            <h2 class="section-title">یادداشت‌ها</h2>
+            <span class="section-rule" aria-hidden="true"></span>
+        </div>
+        <p class="notes-lead">فکرهایی کوتاه‌تر از یک بلاگ، بلندتر از یک توییت؛ چیزهایی که در راه به ذهنم رسیدند.</p>
+
+        <div class="notes-grid">
+            <article class="note-card">
+                <span class="note-mark" aria-hidden="true">✎</span>
+                <p class="note-text">هر خط کدی که امروز حذف می‌کنی، فردا کسی مجبور نیست بفهمدش.</p>
+                <span class="note-date">۱۲ تیر ۱۴۰۵</span>
+            </article>
+            <article class="note-card note-card-tint">
+                <span class="note-mark" aria-hidden="true">✎</span>
+                <p class="note-text">بهترین رابط کاربری، رابطی است که کاربر اصلاً متوجه‌ی وجودش نمی‌شود.</p>
+                <span class="note-date">۵ تیر ۱۴۰۵</span>
+            </article>
+            <article class="note-card">
+                <span class="note-mark" aria-hidden="true">✎</span>
+                <p class="note-text">صنعتگری یعنی دوباره‌کاری تا وقتی که دیگر جایی برای بهتر شدن نماند.</p>
+                <span class="note-date">۲۸ خرداد ۱۴۰۵</span>
+            </article>
+            <article class="note-card note-card-tint">
+                <span class="note-mark" aria-hidden="true">✎</span>
+                <p class="note-text">سرعت زیاد، دشمن دقت است. آهسته برو، درست برو.</p>
+                <span class="note-date">۱۹ خرداد ۱۴۰۵</span>
+            </article>
+            <article class="note-card">
+                <span class="note-mark" aria-hidden="true">✎</span>
+                <p class="note-text">هر پروژه یک مکالمه است؛ بین تو، کدت، و آدمی که قرار است ازش استفاده کند.</p>
+                <span class="note-date">۸ خرداد ۱۴۰۵</span>
+            </article>
+            <article class="note-card note-card-tint">
+                <span class="note-mark" aria-hidden="true">✎</span>
+                <p class="note-text">چیزی که ساده به‌نظر می‌رسد، معمولاً پشتش یک تصمیم سخت پنهان شده.</p>
+                <span class="note-date">۱ خرداد ۱۴۰۵</span>
+            </article>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="about-inner">
+            <div class="about-visual">
+                <div class="about-avatar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 1.5 C12.6 7.8 14.2 9.4 20.5 10 C14.2 10.6 12.6 12.2 12 18.5 C11.4 12.2 9.8 10.6 3.5 10 C9.8 9.4 11.4 7.8 12 1.5 Z"/>
+                    </svg>
+                </div>
+                <span class="about-badge">دفتر چهارم</span>
+            </div>
+
+            <div class="about-content">
+                <p class="eyebrow">درباره‌ی درنگ</p>
+                <h2 class="about-title">جایی برای فکر کردن، قبل از ساختن</h2>
+                <p class="about-text">درنگ دفترچه‌ی یادداشت یک نفر است که دوست دارد قبل از نوشتنِ خط اول کد، کمی مکث
+                    کند. این‌جا درباره‌ی نرم‌افزار، طراحی، و صنعتگری می‌نویسم؛ و درباره‌ی تصمیم‌های کوچکی که هیچ‌کس
+                    نمی‌بیند اما همه‌چیز را عوض می‌کنند.</p>
+
+                <div class="about-timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-year">۱۴۰۲</span>
+                        <p class="timeline-text">شروع درنگ، به‌عنوان یک دفترچه‌ی شخصی برای یادداشت‌های پراکنده.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">۱۴۰۳</span>
+                        <p class="timeline-text">اولین سری بلاگ‌های بلند درباره‌ی معماری نرم‌افزار منتشر شد.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">۱۴۰۵</span>
+                        <p class="timeline-text">درنگ دفتر چهارم را آغاز کرد؛ آهسته‌تر، دقیق‌تر، صادقانه‌تر.</p>
+                    </div>
+                </div>
+
+                <div class="about-tags">
+                    <span class="about-tag">نرم‌افزار</span>
+                    <span class="about-tag">طراحی رابط کاربری</span>
+                    <span class="about-tag">صنعتگری دیجیتال</span>
+                    <span class="about-tag">نوشتن آهسته</span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -145,9 +287,9 @@
 
         <div class="footer-col">
             <h3 class="footer-heading">بخش‌ها</h3>
-            <a href="#" class="footer-link">تازه‌ها</a>
-            <a href="#" class="footer-link">بلاگ ها</a>
-            <a href="#" class="footer-link">یادداشت‌ها</a>
+            <a href="#home" class="footer-link">تازه‌ها</a>
+            <a href="#blogs" class="footer-link">بلاگ ها</a>
+            <a href="#notes" class="footer-link">یادداشت‌ها</a>
             <a href="#" class="footer-link">آرشیو</a>
         </div>
 
@@ -161,7 +303,7 @@
 
         <div class="footer-col">
             <h3 class="footer-heading">درباره</h3>
-            <a href="#" class="footer-link">درباره‌ی ما</a>
+            <a href="#about" class="footer-link">درباره‌ی ما</a>
             <a href="#" class="footer-link">تماس با ما</a>
             <a href="#" class="footer-link">همکاری</a>
             <a href="#" class="footer-link">حریم خصوصی</a>
@@ -174,7 +316,37 @@
         <p class="footer-credit">با آرامش نوشته شده، در فرانکفورت.</p>
     </div>
 </footer>
+
+<button class="back-to-top" id="back-to-top" type="button" aria-label="بازگشت به بالا">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+</button>
+
+<div class="cmdk-overlay" id="cmdk-overlay">
+    <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="جستجوی سریع">
+        <div class="cmdk-input-wrap">
+            <svg class="cmdk-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <circle cx="11" cy="11" r="7"/>
+                <path d="M21 21l-4.3-4.3"/>
+            </svg>
+            <input type="text" id="cmdk-input" class="cmdk-input" placeholder="جستجو در بخش‌ها و نوشته‌ها…"
+                   autocomplete="off">
+            <kbd class="cmdk-esc">Esc</kbd>
+        </div>
+        <div class="cmdk-list" id="cmdk-list"></div>
+    </div>
+</div>
+
 <script>
+    function scrollToHashIfNeeded() {
+        if (!window.location.hash) return;
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+            target.scrollIntoView({behavior: "instant", block: "start"});
+        }
+    }
+
     function loadBlogs() {
         fetch("http://localhost:8080/blogs")
             .then(res => res.json())
@@ -184,7 +356,11 @@
                 }
                 centerOddCard();
                 fadeInCards();
+                registerBlogsInCmdk(blogs);
+                scrollToHashIfNeeded();
             })
+            .catch(() => {
+            });
     }
 
     function convertToHTML(blog) {
@@ -267,7 +443,10 @@
         .post-page-footer,
         .reviews-panel,
         .review-card,
-        .footer-main
+        .footer-main,
+        .stats-inner,
+        .note-card,
+        .about-inner
     `));
     }
 
@@ -307,6 +486,7 @@
             card.style.transform = "";
         });
     }
+
     function fadeInCards() {
         const cards = document.querySelectorAll(".post-card-wrap:not(.card-loaded)");
         cards.forEach((card, i) => {
@@ -315,9 +495,10 @@
 
             card.addEventListener("animationend", () => {
                 card.style.animation = "none";
-            }, { once: true });
+            }, {once: true});
         });
     }
+
     function centerOddCard() {
         const cards = document.querySelectorAll(".post-card-wrap");
 
@@ -348,8 +529,6 @@
         const rect = link.getBoundingClientRect();
 
         indicator.style.width = `${rect.width}px`;
-        // right:0 anchors the indicator's right edge to nav's right edge.
-        // Shift it left by however far the link's right edge is from nav's right edge.
         indicator.style.transform = `translateX(${-(navRect.right - rect.right)}px)`;
         indicator.style.opacity = "1";
     }
@@ -370,9 +549,36 @@
 
     const spySections = [...document.querySelectorAll("main section[id]")];
 
+    let suppressSpy = false;
+    let spyResumeTimer;
+
+    function armSpySuppression() {
+        suppressSpy = true;
+        clearTimeout(spyResumeTimer);
+
+        const checkScrollEnd = () => {
+            clearTimeout(spyResumeTimer);
+            spyResumeTimer = setTimeout(() => {
+                suppressSpy = false;
+                window.removeEventListener("scroll", checkScrollEnd);
+            }, 150);
+        };
+
+        window.addEventListener("scroll", checkScrollEnd, {passive: true});
+        checkScrollEnd(); // schedule the first check immediately too
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener("click", () => {
+            setActiveLink(link);
+            armSpySuppression();
+        });
+    });
+
     if (spySections.length) {
         const spy = new IntersectionObserver(
             entries => {
+                if (suppressSpy) return;
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const link = linkForSection(entry.target.id);
@@ -382,16 +588,12 @@
             },
             {
                 root: null,
-                rootMargin: "-45% 0px -50% 0px", // activates when section crosses mid-viewport band
+                rootMargin: "-45% 0px -50% 0px",
                 threshold: 0
             }
         );
         spySections.forEach(s => spy.observe(s));
     }
-
-    navLinks.forEach(link => {
-        link.addEventListener("click", () => setActiveLink(link));
-    });
 
     window.addEventListener("resize", () => {
         const active = document.querySelector(".nav-link.is-active");
@@ -412,9 +614,239 @@
         });
     }
 
+    /* ---------- Theme toggle ---------- */
+    const themeToggle = document.getElementById("theme-toggle");
+    const rootEl = document.documentElement;
+
+    function applyTheme(theme) {
+        rootEl.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("derang-theme", theme);
+        } catch (e) {
+        }
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+            const next = rootEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            applyTheme(next);
+        });
+    }
+
+    /* ---------- Scroll progress bar ---------- */
+    const scrollProgress = document.getElementById("scroll-progress");
+
+    function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        if (scrollProgress) scrollProgress.style.width = pct + "%";
+    }
+
+    window.addEventListener("scroll", updateScrollProgress, {passive: true});
+    window.addEventListener("resize", updateScrollProgress);
+
+    /* ---------- Back to top ---------- */
+    const backToTop = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+        if (backToTop) backToTop.classList.toggle("is-visible", window.scrollY > 500);
+    }, {passive: true});
+
+    if (backToTop) {
+        backToTop.addEventListener("click", () => {
+            window.scrollTo({top: 0, behavior: "smooth"});
+        });
+    }
+
+    /* ---------- Animated stat counters ---------- */
+    function animateCounter(el) {
+        const target = parseInt(el.dataset.target, 10) || 0;
+        const suffix = el.dataset.suffix || "";
+        const duration = 1400;
+        const start = performance.now();
+
+        function tick(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const value = Math.round(target * eased);
+            el.textContent = value.toLocaleString("fa-IR") + suffix;
+            if (progress < 1) requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+    }
+
+    function initStatCounters() {
+        const stats = document.querySelectorAll(".stat-number");
+        if (!stats.length) return;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.animated) {
+                    entry.target.dataset.animated = "true";
+                    animateCounter(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {threshold: 0.4});
+        stats.forEach(s => observer.observe(s));
+    }
+
+    /* ---------- Cursor glow in hero ---------- */
+    const heroSection = document.querySelector(".hero");
+    const cursorGlow = document.getElementById("cursor-glow");
+
+    if (heroSection && cursorGlow && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        heroSection.addEventListener("mousemove", (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            cursorGlow.style.setProperty("--x", `${e.clientX - rect.left}px`);
+            cursorGlow.style.setProperty("--y", `${e.clientY - rect.top}px`);
+        });
+    }
+
+    /* ---------- Command palette (⌘K) ---------- */
+    const cmdkData = [
+        {title: "تازه‌ها", sub: "بازگشت به بالای صفحه", href: "#home"},
+        {title: "نوشته‌های اخیر", sub: "فهرست بلاگ‌ها", href: "#blogs"},
+        {title: "یادداشت‌ها", sub: "یادداشت‌های کوتاه", href: "#notes"},
+        {title: "درباره", sub: "درباره‌ی درنگ", href: "#about"}
+    ];
+    let cmdkAllItems = cmdkData;
+
+    function registerBlogsInCmdk(blogs) {
+        const blogItems = blogs.map(b => ({
+            title: b.title,
+            sub: "بلاگ · " + b.author,
+            href: "http://localhost:8080/blog?id=" + b.id,
+            external: true
+        }));
+        cmdkAllItems = [...cmdkData, ...blogItems];
+    }
+
+    const cmdkOverlay = document.getElementById("cmdk-overlay");
+    const cmdkInput = document.getElementById("cmdk-input");
+    const cmdkList = document.getElementById("cmdk-list");
+    let cmdkActiveIndex = 0;
+    let cmdkFiltered = cmdkData;
+
+    function renderCmdk() {
+        if (!cmdkFiltered.length) {
+            cmdkList.innerHTML = `<p class="cmdk-empty">نتیجه‌ای پیدا نشد.</p>`;
+            return;
+        }
+        cmdkList.innerHTML = cmdkFiltered.map((item, i) => `
+            <div class="cmdk-item ${i === cmdkActiveIndex ? "is-active" : ""}" data-index="${i}">
+                <svg class="cmdk-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <circle cx="12" cy="12" r="9"/>
+                </svg>
+                <div class="cmdk-item-text">
+                    <span class="cmdk-item-title">${item.title}</span>
+                    <span class="cmdk-item-sub">${item.sub}</span>
+                </div>
+            </div>
+        `).join("");
+
+        cmdkList.querySelectorAll(".cmdk-item").forEach((el) => {
+            const i = parseInt(el.dataset.index, 10);
+            el.addEventListener("click", () => goToCmdkItem(cmdkFiltered[i]));
+            el.addEventListener("mousemove", () => {
+                if (cmdkActiveIndex !== i) {
+                    cmdkActiveIndex = i;
+                    renderCmdk();
+                }
+            });
+        });
+    }
+
+    function goToCmdkItem(item) {
+        closeCmdk();
+        if (item.external) {
+            window.location.href = item.href;
+            return;
+        }
+        const target = document.querySelector(item.href);
+        if (target) target.scrollIntoView({behavior: "smooth", block: "start"});
+    }
+
+    function openCmdk() {
+        cmdkOverlay.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+        cmdkInput.value = "";
+        cmdkFiltered = cmdkAllItems;
+        cmdkActiveIndex = 0;
+        renderCmdk();
+        setTimeout(() => cmdkInput.focus(), 50);
+    }
+
+    function closeCmdk() {
+        cmdkOverlay.classList.remove("is-open");
+        document.body.style.overflow = "";
+    }
+
+    if (cmdkInput) {
+        cmdkInput.addEventListener("input", () => {
+            const q = cmdkInput.value.trim().toLowerCase();
+            cmdkFiltered = cmdkAllItems.filter(item =>
+                item.title.toLowerCase().includes(q) || item.sub.toLowerCase().includes(q)
+            );
+            cmdkActiveIndex = 0;
+            renderCmdk();
+        });
+
+        cmdkInput.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                cmdkActiveIndex = Math.min(cmdkActiveIndex + 1, cmdkFiltered.length - 1);
+                renderCmdk();
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                cmdkActiveIndex = Math.max(cmdkActiveIndex - 1, 0);
+                renderCmdk();
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                if (cmdkFiltered[cmdkActiveIndex]) goToCmdkItem(cmdkFiltered[cmdkActiveIndex]);
+            }
+        });
+    }
+
+    const mobileSearchTrigger = document.getElementById("mobile-search-trigger");
+    if (mobileSearchTrigger) {
+        mobileSearchTrigger.addEventListener("click", () => {
+            mobileNavPanel.classList.remove("is-open");
+            hamburgerBtn.classList.remove("is-open");
+            hamburgerBtn.setAttribute("aria-expanded", "false");
+            document.body.classList.remove("nav-open");
+            openCmdk();
+        });
+    }
+
+    const searchTrigger = document.getElementById("search-trigger");
+    if (searchTrigger) searchTrigger.addEventListener("click", openCmdk);
+
+    if (cmdkOverlay) {
+        cmdkOverlay.addEventListener("click", (e) => {
+            if (e.target === cmdkOverlay) closeCmdk();
+        });
+    }
+
+    document.addEventListener("keydown", (e) => {
+        const isK = e.key.toLowerCase() === "k";
+        if ((e.metaKey || e.ctrlKey) && isK) {
+            e.preventDefault();
+            if (cmdkOverlay.classList.contains("is-open")) {
+                closeCmdk();
+            } else {
+                openCmdk();
+            }
+        }
+        if (e.key === "Escape" && cmdkOverlay.classList.contains("is-open")) closeCmdk();
+    });
+
     window.addEventListener("load", () => {
         setTimeout(initRevealAnimations, 100);
         initCardTilt();
+        initStatCounters();
+        updateScrollProgress();
     });
 
     loadBlogs();

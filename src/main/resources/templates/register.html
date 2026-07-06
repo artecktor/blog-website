@@ -235,6 +235,48 @@
     password.addEventListener("input", validatePasswords);
     repeat.addEventListener("input", validatePasswords);
 
+    // ---------------- Live duplicate-email check (border color) ----------------
+    const emailInput = document.getElementById("register-email");
+    let emailCheckTimer = null;
+
+    async function isEmailTaken(email) {
+        const res = await fetch("http://localhost:8080/users");
+        if (!res.ok) throw new Error("failed to fetch users");
+        const users = await res.json();
+        return users.some(u => u.email.toLowerCase() === email.toLowerCase());
+    }
+
+    async function validateEmail() {
+        const email = emailInput.value.trim();
+
+        if (email === "" || !emailInput.checkValidity()) {
+            emailInput.classList.remove("valid", "invalid");
+            return;
+        }
+
+        try {
+            const emailTaken = await isEmailTaken(email);
+
+            if (emailTaken) {
+                emailInput.classList.add("invalid");
+                emailInput.classList.remove("valid");
+            } else {
+                emailInput.classList.add("valid");
+                emailInput.classList.remove("invalid");
+            }
+        } catch (err) {
+            // network hiccup — don't mislead the user with a false valid/invalid state
+            emailInput.classList.remove("valid", "invalid");
+        }
+    }
+
+    emailInput.addEventListener("input", () => {
+        clearTimeout(emailCheckTimer);
+        emailInput.classList.remove("valid", "invalid"); // clear stale state while typing
+        emailCheckTimer = setTimeout(validateEmail, 400); // debounce so we don't hit the server every keystroke
+    });
+    // ---------------- end live duplicate-email check ----------------
+
     function showGlassAlert(title, text) {
         const overlay = document.getElementById("glass-alert-overlay");
 
@@ -290,7 +332,14 @@
     }
 
     document.getElementById("register-form")
-        .addEventListener("submit", function (event) {
+        .addEventListener("submit", async function (event) {
+
+            event.preventDefault(); // always intercept first, then decide whether to actually submit
+
+            const form = event.target;
+
+            const email =
+                document.getElementById("register-email").value.trim();
 
             const password =
                 document.getElementById("register-password").value.trim();
@@ -300,34 +349,51 @@
 
             // Empty check (optional because required already exists)
             if (!password || !repeatPassword) {
-                event.preventDefault();
-
                 showGlassAlert(
                     "فیلدهای ناقص",
                     "لطفاً هر دو فیلد رمز عبور را پر کنید."
                 );
-
                 return;
             }
 
             // Password match check
             if (password !== repeatPassword) {
-                event.preventDefault();
-
                 showGlassAlert(
                     "عدم تطابق رمز عبور",
                     "رمز عبور و تکرار رمز عبور باید یکسان باشند."
                 );
 
-                // clear only repeat password (optional)
                 document.getElementById("register-password2").value = "";
-
-                // focus back
                 document.getElementById("register-password2").focus();
-
                 return;
             }
 
+            // Duplicate email check (final guard before actually submitting)
+            const submitBtn = form.querySelector(".btn-auth-primary");
+            submitBtn.disabled = true;
+
+            try {
+                const emailTaken = await isEmailTaken(email);
+
+                if (emailTaken) {
+                    showGlassAlert(
+                        "ایمیل تکراری",
+                        "این ایمیل قبلاً ثبت شده است. لطفاً وارد شوید یا از ایمیل دیگری استفاده کنید."
+                    );
+                    emailInput.classList.add("invalid");
+                    emailInput.classList.remove("valid");
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                form.submit(); // all checks passed, submit for real
+            } catch (err) {
+                showGlassAlert(
+                    "خطا",
+                    "بررسی ایمیل با مشکل مواجه شد. لطفاً دوباره تلاش کنید."
+                );
+                submitBtn.disabled = false;
+            }
         });
 
 </script>

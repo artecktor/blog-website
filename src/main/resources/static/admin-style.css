@@ -1145,3 +1145,87 @@ tr.is-expanded .comment-text-cell {
 .glass-alert .bulk-btn {
     border-radius: 999px;
 }
+
+/* ---------------------------------------------
+   Admin header — search & theme toggle
+   (grouped together with the exit link, all on
+   the left side, same arrangement as the home page)
+--------------------------------------------- */
+.admin-header-actions {
+    gap: 14px;
+}
+
+@media (max-width: 900px) {
+    .admin-header-actions .search-trigger-label,
+    .admin-header-actions .search-kbd {
+        display: none;
+    }
+
+    .admin-header-actions .search-trigger {
+        padding: 0;
+        width: 42px;
+        height: 42px;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .admin-header-actions .admin-exit-link span {
+        display: none;
+    }
+}
+
+/* ---------------------------------------------
+   Dark mode — match the homepage's glass cards
+--------------------------------------------- */
+html[data-theme="dark"] .admin-card,
+html[data-theme="dark"] .stat-chip,
+html[data-theme="dark"] .comments-table-shell,
+html[data-theme="dark"] .filter-group,
+html[data-theme="dark"] .bulk-bar-inner,
+html[data-theme="dark"] .comments-table thead th,
+html[data-theme="dark"] .admin-exit-link,
+html[data-theme="dark"] .search-trigger,
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .editor-panel-inner,
+html[data-theme="dark"] .editor-fields .form-field input,
+html[data-theme="dark"] .editor-fields .form-field textarea {
+    background: rgba(255, 255, 255, .05);
+    border-color: rgba(255, 255, 255, .12);
+}
+
+html[data-theme="dark"] .stat-chip-alert,
+html[data-theme="dark"] .comment-action-btn,
+html[data-theme="dark"] .filter-pill-count,
+html[data-theme="dark"] .admin-card-count,
+html[data-theme="dark"] .status-badge.accepted {
+    background: rgba(255, 255, 255, .07);
+    border-color: rgba(255, 255, 255, .14);
+}
+
+html[data-theme="dark"] .status-badge.pending,
+html[data-theme="dark"] .stat-chip-alert .stat-chip-number,
+html[data-theme="dark"] .admin-card-count-alert,
+html[data-theme="dark"] .filter-pill.is-active .filter-pill-count,
+html[data-theme="dark"] .comments-table tbody tr.is-target {
+    background: rgba(232, 145, 107, .16);
+    border-color: rgba(232, 145, 107, .35);
+}
+
+/* ---------------------------------------------
+   Fix: <kbd> elements (⌘K badge, Esc badge) were
+   inheriting Bootstrap's default black kbd
+   background on pages that load bootstrap.min.css.
+   Neither style.css nor admin-style.css previously
+   set a background on these, so Bootstrap's rule
+   (kbd { background-color: #212529 }) won.
+--------------------------------------------- */
+.search-kbd,
+.cmdk-esc {
+    background: rgba(255, 255, 255, .4);
+}
+
+html[data-theme="dark"] .search-kbd,
+html[data-theme="dark"] .cmdk-esc {
+    background: rgba(255, 255, 255, .07);
+    border-color: rgba(255, 255, 255, .14);
+}

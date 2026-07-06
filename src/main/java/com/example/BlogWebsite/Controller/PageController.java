@@ -37,33 +37,6 @@ public class PageController {
         return "blog";
     }
 
-    @GetMapping("/book-list")
-    public String bookList() {
-        return "books";
-    }
-
-    @GetMapping("/admin/books")
-    public String adminBooks() {
-        return "adminBook";
-    }
-
-    @GetMapping("/admin/book/save")
-    public String saveBook() {
-        return "saveBook";
-    }
-
-    @GetMapping("/admin/book/update")
-    public String updateBook() {
-        return "updateBook";
-    }
-
-    @PostMapping("/book/save")
-    public String saveBook(BlogSaveDTO blogSaveDTO) {
-        Blog blog = blogSaveDTO.convertToBlog();
-        blogService.save(blog);
-        return "redirect:/admin/books";
-    }
-
     @GetMapping("/register")
     public String register() {
         return "register";
@@ -74,7 +47,7 @@ public class PageController {
         ApplicationUser user = userSaveDTO.convertToApplicationUser();
         user.setRole(Role.USER);
         applicationUserService.save(user);
-        return "home";
+        return "redirect:/";
     }
     @PostMapping("/blogs")
     public String saveBlog(BlogSaveDTO blogSaveDTO) {
@@ -105,6 +78,16 @@ public class PageController {
 
         return "redirect:/";
     }
+//    @PostMapping("/login")
+//    public String login(String username, String password) {
+//        ApplicationUser user = applicationUserService.findByEmailAndPassword(username, password);
+//        if (user == null) {
+//            return "login";
+//        } else {
+//            return "redirect:/";
+//        }
+//
+//    }
 
     @GetMapping("/login")
     public String login() {
@@ -139,9 +122,5 @@ public class PageController {
         commentService.save(comment);
         int blogId = comment.getBlogId();
         return "redirect:/blog?id=" + blogId;
-    }
-    public @GetMapping("/test")
-    String test() {
-        return "test";
     }
 }

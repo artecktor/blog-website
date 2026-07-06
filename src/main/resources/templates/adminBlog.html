@@ -11,7 +11,17 @@
     <link rel="stylesheet" href="/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/admin-style.css">
-    <link rel="stylesheet" href="/login-style.css">
+    <!--    <link rel="stylesheet" href="/login-style.css">-->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem("derang-theme");
+                var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                document.documentElement.setAttribute("data-theme", theme);
+            } catch (e) {
+            }
+        })();
+    </script>
 </head>
 <body>
 
@@ -39,12 +49,35 @@
             <span class="admin-badge">مدیریت</span>
         </a>
 
-        <a href="http://localhost:8080" class="admin-exit-link">
-            <span>بازگشت به سایت</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M15 5 L8 12 L15 19"/>
-            </svg>
-        </a>
+        <div class="header-right admin-header-actions">
+            <button class="search-trigger" type="button" id="search-trigger" aria-label="جستجوی سریع">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="M21 21l-4.3-4.3"/>
+                </svg>
+                <span class="search-trigger-label">جستجو</span>
+                <kbd class="search-kbd">⌘K</kbd>
+            </button>
+
+            <button class="theme-toggle" type="button" id="theme-toggle" aria-label="تغییر پوسته">
+                <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.7">
+                    <circle cx="12" cy="12" r="4.2"/>
+                    <path d="M12 2.5v2.6M12 18.9v2.6M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/>
+                </svg>
+                <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.7">
+                    <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/>
+                </svg>
+            </button>
+
+            <a href="http://localhost:8080" class="admin-exit-link">
+                <span>بازگشت به سایت</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M15 5 L8 12 L15 19"/>
+                </svg>
+            </a>
+        </div>
     </div>
 </header>
 
@@ -83,10 +116,10 @@
                     <thead>
                     <tr>
                         <th class="col-author" style="padding-right:24px;">بلاگ</th>
-                        <!--                        <th class="col-comment">توضیحات</th>-->
                         <th class="col-post">توضیحات</th>
                         <th class="col-status">نویسنده</th>
-                        <th class="col-actions">مدت مطالعه</th>
+                        <th class="col-date">مدت مطالعه</th>
+                        <th class="col-actions">عملیات</th>
                     </tr>
                     </thead>
                     <tbody id="blogs-tbody"></tbody>
@@ -105,6 +138,21 @@
     </section>
 
 </main>
+
+<div class="cmdk-overlay" id="cmdk-overlay">
+    <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="جستجوی سریع">
+        <div class="cmdk-input-wrap">
+            <svg class="cmdk-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <circle cx="11" cy="11" r="7"/>
+                <path d="M21 21l-4.3-4.3"/>
+            </svg>
+            <input type="text" id="cmdk-input" class="cmdk-input" placeholder="جستجو در بخش‌های مدیریت…"
+                   autocomplete="off">
+            <kbd class="cmdk-esc">Esc</kbd>
+        </div>
+        <div class="cmdk-list" id="cmdk-list"></div>
+    </div>
+</div>
 
 <div class="glass-overlay" id="glass-alert-overlay">
     <div class="glass-alert">
@@ -256,6 +304,144 @@
     });
 
     loadBlogs();
+</script>
+
+<script>
+    /* ---------- Theme toggle (same behavior as the main site) ---------- */
+    const themeToggle = document.getElementById("theme-toggle");
+    const rootEl = document.documentElement;
+
+    function applyTheme(theme) {
+        rootEl.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("derang-theme", theme);
+        } catch (e) {
+        }
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+            const next = rootEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            applyTheme(next);
+        });
+    }
+
+    /* ---------- Command palette (⌘K), scoped to admin sections ---------- */
+    const cmdkData = [
+        {title: "پنل مدیریت", sub: "بازگشت به صفحه اصلی مدیریت", href: "http://localhost:8080/admin", external: true},
+        {title: "بلاگها", sub: "نوشتن، ویرایش و انتشار بلاگها", href: "http://localhost:8080/admin/blogs", external: true},
+        {title: "کاربران", sub: "حساب‌های کاربری و دسترسی‌ها", href: "http://localhost:8080/admin/users", external: true},
+        {title: "دیدگاه‌ها", sub: "بررسی، تأیید یا حذف دیدگاه‌ها", href: "http://localhost:8080/admin/comments", external: true},
+        {title: "بازگشت به سایت", sub: "خروج از پنل مدیریت", href: "http://localhost:8080", external: true}
+    ];
+
+    const cmdkOverlay = document.getElementById("cmdk-overlay");
+    const cmdkInput = document.getElementById("cmdk-input");
+    const cmdkList = document.getElementById("cmdk-list");
+    let cmdkActiveIndex = 0;
+    let cmdkFiltered = cmdkData;
+
+    function renderCmdk() {
+        if (!cmdkFiltered.length) {
+            cmdkList.innerHTML = `<p class="cmdk-empty">نتیجه‌ای پیدا نشد.</p>`;
+            return;
+        }
+        cmdkList.innerHTML = cmdkFiltered.map((item, i) => `
+            <div class="cmdk-item ${i === cmdkActiveIndex ? "is-active" : ""}" data-index="${i}">
+                <svg class="cmdk-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <circle cx="12" cy="12" r="9"/>
+                </svg>
+                <div class="cmdk-item-text">
+                    <span class="cmdk-item-title">${item.title}</span>
+                    <span class="cmdk-item-sub">${item.sub}</span>
+                </div>
+            </div>
+        `).join("");
+
+        cmdkList.querySelectorAll(".cmdk-item").forEach((el) => {
+            const i = parseInt(el.dataset.index, 10);
+            el.addEventListener("click", () => goToCmdkItem(cmdkFiltered[i]));
+            el.addEventListener("mousemove", () => {
+                if (cmdkActiveIndex !== i) {
+                    cmdkActiveIndex = i;
+                    renderCmdk();
+                }
+            });
+        });
+    }
+
+    function goToCmdkItem(item) {
+        closeCmdk();
+        if (item.external) {
+            window.location.href = item.href;
+            return;
+        }
+        const target = document.querySelector(item.href);
+        if (target) target.scrollIntoView({behavior: "smooth", block: "start"});
+    }
+
+    function openCmdk() {
+        cmdkOverlay.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+        cmdkInput.value = "";
+        cmdkFiltered = cmdkData;
+        cmdkActiveIndex = 0;
+        renderCmdk();
+        setTimeout(() => cmdkInput.focus(), 50);
+    }
+
+    function closeCmdk() {
+        cmdkOverlay.classList.remove("is-open");
+        document.body.style.overflow = "";
+    }
+
+    if (cmdkInput) {
+        cmdkInput.addEventListener("input", () => {
+            const q = cmdkInput.value.trim().toLowerCase();
+            cmdkFiltered = cmdkData.filter(item =>
+                item.title.toLowerCase().includes(q) || item.sub.toLowerCase().includes(q)
+            );
+            cmdkActiveIndex = 0;
+            renderCmdk();
+        });
+
+        cmdkInput.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                cmdkActiveIndex = Math.min(cmdkActiveIndex + 1, cmdkFiltered.length - 1);
+                renderCmdk();
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                cmdkActiveIndex = Math.max(cmdkActiveIndex - 1, 0);
+                renderCmdk();
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                if (cmdkFiltered[cmdkActiveIndex]) goToCmdkItem(cmdkFiltered[cmdkActiveIndex]);
+            }
+        });
+    }
+
+    const searchTrigger = document.getElementById("search-trigger");
+    if (searchTrigger) searchTrigger.addEventListener("click", openCmdk);
+
+    if (cmdkOverlay) {
+        cmdkOverlay.addEventListener("click", (e) => {
+            if (e.target === cmdkOverlay) closeCmdk();
+        });
+    }
+
+    document.addEventListener("keydown", (e) => {
+        const isK = e.key.toLowerCase() === "k";
+        if ((e.metaKey || e.ctrlKey) && isK) {
+            e.preventDefault();
+            if (cmdkOverlay.classList.contains("is-open")) {
+                closeCmdk();
+            } else {
+                openCmdk();
+            }
+        }
+        if (e.key === "Escape" && cmdkOverlay.classList.contains("is-open")) closeCmdk();
+    });
 </script>
 
 </body>

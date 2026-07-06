@@ -43,6 +43,7 @@ public class Blog {
         this.author = author;
     }
 
+    @Column(length = 10000)
     public String getContent() {
         return content;
     }

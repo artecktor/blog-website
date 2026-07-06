@@ -10,8 +10,18 @@
           rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style.css">
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem("derang-theme");
+                var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                document.documentElement.setAttribute("data-theme", theme);
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body>
+<div class="scroll-progress" id="scroll-progress"></div>
 <div class="ambient" aria-hidden="true">
     <span class="blob blob-a"></span>
     <span class="blob blob-b"></span>
@@ -31,9 +41,29 @@
             <nav class="site-nav" aria-label="ناوبری اصلی">
                 <a href="http://localhost:8080#home" class="nav-link">تازه‌ها</a>
                 <a href="http://localhost:8080#blogs" class="nav-link">بلاگ ها</a>
-                <a href="#" class="nav-link">یادداشت‌ها</a>
-                <a href="#" class="nav-link">درباره</a>
+                <a href="http://localhost:8080#notes" class="nav-link">یادداشت‌ها</a>
+                <a href="http://localhost:8080#about" class="nav-link">درباره</a>
             </nav>
+
+            <button class="search-trigger" type="button" id="search-trigger" aria-label="جستجوی سریع">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="M21 21l-4.3-4.3"/>
+                </svg>
+                <span class="search-trigger-label">جستجو</span>
+                <kbd class="search-kbd">⌘K</kbd>
+            </button>
+
+            <button class="theme-toggle" type="button" id="theme-toggle" aria-label="تغییر پوسته">
+                <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <circle cx="12" cy="12" r="4.2"/>
+                    <path d="M12 2.5v2.6M12 18.9v2.6M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/>
+                </svg>
+                <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/>
+                </svg>
+            </button>
+
             <button class="hamburger-btn" type="button" id="hamburger-btn" aria-label="باز کردن منو"
                     aria-expanded="false" aria-controls="mobile-nav-panel">
                 <span class="hamburger-lines">
@@ -57,10 +87,10 @@
     </div>
 </header>
 <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="ناوبری موبایل">
-    <a href="#" class="mobile-nav-link is-active">تازه‌ها</a>
-    <a href="#" class="mobile-nav-link">بلاگ ها</a>
-    <a href="#" class="mobile-nav-link">یادداشت‌ها</a>
-    <a href="#" class="mobile-nav-link">درباره</a>
+    <a href="http://localhost:8080#home" class="mobile-nav-link is-active">تازه‌ها</a>
+    <a href="http://localhost:8080#blogs" class="mobile-nav-link">بلاگ ها</a>
+    <a href="http://localhost:8080#notes" class="mobile-nav-link">یادداشت‌ها</a>
+    <a href="http://localhost:8080#about" class="mobile-nav-link">درباره</a>
     <div class="mobile-nav-divider"></div>
     <button class="mobile-nav-cta btn-ghost-mobile" type="button"
             onclick="window.location.href='http://localhost:8080/login'">ورود
@@ -316,6 +346,12 @@
     </div>
 </div>
 
+<button class="back-to-top" id="back-to-top" type="button" aria-label="بازگشت به بالا">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+</button>
+
 <script>
     let blogId = new URLSearchParams(window.location.search).get("id");
 
@@ -333,6 +369,14 @@
             })
     }
 
+    function scrollToHashIfNeeded() {
+        if (!window.location.hash) return;
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+            target.scrollIntoView({ behavior: "instant", block: "start" });
+        }
+    }
+
     function loadBlogs() {
         fetch("http://localhost:8080/blogs")
             .then(res => res.json())
@@ -344,7 +388,10 @@
                 }
                 centerOddCard();
                 fadeInCards();
+                registerBlogsInCmdk(blogs);
+                scrollToHashIfNeeded();
             })
+            .catch(() => {});
     }
     function centerOddCard() {
         const cards = document.querySelectorAll(".post-card-wrap");
@@ -657,6 +704,51 @@
             card.style.transform = "";
         });
     }
+
+    /* Theme toggle */
+    const themeToggle = document.getElementById("theme-toggle");
+    const rootEl = document.documentElement;
+
+    function applyTheme(theme) {
+        rootEl.setAttribute("data-theme", theme);
+        try { localStorage.setItem("derang-theme", theme); } catch (e) {}
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+            const next = rootEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            applyTheme(next);
+        });
+    }
+
+    /* Scroll progress bar */
+    const scrollProgress = document.getElementById("scroll-progress");
+
+    function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        if (scrollProgress) scrollProgress.style.width = pct + "%";
+    }
+
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress);
+
+    /* Back to top */
+    const backToTop = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+        if (backToTop) backToTop.classList.toggle("is-visible", window.scrollY > 500);
+    }, { passive: true });
+
+    if (backToTop) {
+        backToTop.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+
+    window.addEventListener("load", updateScrollProgress);
+
     window.addEventListener("load", () => {
         setTimeout(initRevealAnimations, 100);
         initCardTilt();
@@ -668,6 +760,5 @@
     getComments();
     loadBlogs();
 </script>
-
 </body>
 </html>
