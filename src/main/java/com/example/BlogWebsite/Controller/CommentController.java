@@ -47,7 +47,7 @@ public class CommentController {
     }
 
     @GetMapping("/blog/{id}")
-    public List<Comment> findByBookId(@PathVariable int id) {
+    public List<Comment> findByBlogId(@PathVariable int id) {
         return commentService.findByBlogId(id);
     }
 

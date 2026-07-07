@@ -13,8 +13,8 @@
     <script>
         (function () {
             try {
-                var saved = localStorage.getItem("derang-theme");
-                var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                const saved = localStorage.getItem("derang-theme");
+                const theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
                 document.documentElement.setAttribute("data-theme", theme);
             } catch (e) {}
         })();
@@ -382,7 +382,7 @@
             .then(res => res.json())
             .then(blogs => {
                 for (let i = 0; i < blogs.length; i++) {
-                    if (blogs[i].id != blogId) {
+                    if (String(blogs[i].id) !== blogId) {
                         convertToHTML(blogs[i]);
                     }
                 }
@@ -672,7 +672,7 @@
         if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-        const MAX_TILT = 1;
+        const MAX_TILT = 2;
 
         document.addEventListener("mousemove", (e) => {
             const card = e.target.closest(".post-card");

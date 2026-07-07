@@ -12,8 +12,8 @@
     <script>
         (function () {
             try {
-                var saved = localStorage.getItem("derang-theme");
-                var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                const saved = localStorage.getItem("derang-theme");
+                const theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
                 document.documentElement.setAttribute("data-theme", theme);
             } catch (e) {
             }
@@ -330,7 +330,9 @@
                 <circle cx="11" cy="11" r="7"/>
                 <path d="M21 21l-4.3-4.3"/>
             </svg>
+            <label for="cmdk-input" class="visually-hidden">جستجو در بخش‌ها و نوشته‌ها</label>
             <input type="text" id="cmdk-input" class="cmdk-input" placeholder="جستجو در بخش‌ها و نوشته‌ها…"
+
                    autocomplete="off">
             <kbd class="cmdk-esc">Esc</kbd>
         </div>
@@ -468,7 +470,7 @@
         if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-        const MAX_TILT = 1;
+        const MAX_TILT = 2;
 
         document.addEventListener("mousemove", (e) => {
             const card = e.target.closest(".post-card");

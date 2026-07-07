@@ -328,8 +328,15 @@
 
     document.getElementById("confirm-delete-btn").addEventListener("click", async () => {
         if (!pendingDeleteId) return;
-
+        const comments = await fetch("http://localhost:8080/comments/user/" + pendingDeleteId)
+            .then(res => res.json());
+        await Promise.all(
+            comments.map(comment =>
+                fetch("http://localhost:8080/comments/delete/" + comment.id)
+            )
+        );
         await fetch("http://localhost:8080/users/delete/" + pendingDeleteId, {method: "GET"});
+
 
         hideGlassAlert();
         await loadUsers(1);

@@ -245,7 +245,7 @@
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
         !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 
-        const MAX_TILT = 3;
+        const MAX_TILT = 5;
 
         document.querySelectorAll(".admin-card").forEach(card => {
             card.addEventListener("mousemove", (e) => {

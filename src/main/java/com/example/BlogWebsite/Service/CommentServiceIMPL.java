@@ -48,8 +48,8 @@ public class CommentServiceIMPL implements CommentService {
     }
 
     @Override
-    public List<Comment> findByBlogId(int bookId) {
-        return commentRepository.findByBlogId(bookId);
+    public List<Comment> findByBlogId(int blogId) {
+        return commentRepository.findByBlogId(blogId);
     }
 
     @Override

@@ -17,10 +17,9 @@ public class BlogController {
     }
 
     @PostMapping("/update")
-    public String updateBlog(BlogSaveDTO blogSaveDTO) {
+    public void updateBlog(BlogSaveDTO blogSaveDTO) {
         Blog blog = blogSaveDTO.convertToBlog();
         blogService.update(blog);
-        return "adminBook";
     }
 
     @GetMapping("/delete/{id}")

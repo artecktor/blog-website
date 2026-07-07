@@ -36,7 +36,7 @@ public class PageController {
     }
 
     @GetMapping("/blog")
-    public String book() {
+    public String blog() {
         return "blog";
     }
 
@@ -57,7 +57,7 @@ public class PageController {
     public String saveBlog(BlogSaveDTO blogSaveDTO) {
         Blog blog = blogSaveDTO.convertToBlog();
         blogService.save(blog);
-        return "adminBlog";
+        return "redirect:/admin/blogs";
     }
 
     @PostMapping("/login")
