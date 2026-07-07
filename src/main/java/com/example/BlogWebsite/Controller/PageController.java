@@ -1,15 +1,14 @@
 package com.example.BlogWebsite.Controller;
 
+import org.springframework.ui.Model;
 import com.example.BlogWebsite.DTO.BlogSaveDTO;
 import com.example.BlogWebsite.DTO.CommentSaveDTO;
 import com.example.BlogWebsite.DTO.UserSaveDTO;
-import com.example.BlogWebsite.Model.ApplicationUser;
-import com.example.BlogWebsite.Model.Blog;
-import com.example.BlogWebsite.Model.Comment;
-import com.example.BlogWebsite.Model.Role;
+import com.example.BlogWebsite.Model.*;
 import com.example.BlogWebsite.Service.ApplicationUserService;
 import com.example.BlogWebsite.Service.BlogService;
 import com.example.BlogWebsite.Service.CommentService;
+import com.example.BlogWebsite.Service.PageViewCounterService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,16 +18,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PageController {
     private final CommentService commentService;
     private final BlogService blogService;
-    ApplicationUserService applicationUserService;
+    private final ApplicationUserService applicationUserService;
+    private final PageViewCounterService pageViewCounterService;
 
-    public PageController(BlogService blogService, ApplicationUserService applicationUserService, CommentService commentService) {
+    public PageController(BlogService blogService, ApplicationUserService applicationUserService, CommentService commentService, PageViewCounterService pageViewCounterService) {
         this.blogService = blogService;
         this.applicationUserService = applicationUserService;
         this.commentService = commentService;
+        this.pageViewCounterService = pageViewCounterService;
     }
 
     @GetMapping
-    public String home() {
+    public String home(Model model) {
+        long views = pageViewCounterService.incrementAndGet();
+        model.addAttribute("pageViews", views);
         return "home";
     }
 
@@ -49,6 +52,7 @@ public class PageController {
         applicationUserService.save(user);
         return "redirect:/";
     }
+
     @PostMapping("/blogs")
     public String saveBlog(BlogSaveDTO blogSaveDTO) {
         Blog blog = blogSaveDTO.convertToBlog();
@@ -78,16 +82,6 @@ public class PageController {
 
         return "redirect:/";
     }
-//    @PostMapping("/login")
-//    public String login(String username, String password) {
-//        ApplicationUser user = applicationUserService.findByEmailAndPassword(username, password);
-//        if (user == null) {
-//            return "login";
-//        } else {
-//            return "redirect:/";
-//        }
-//
-//    }
 
     @GetMapping("/login")
     public String login() {
@@ -103,10 +97,12 @@ public class PageController {
     public String adminComments() {
         return "adminComment";
     }
+
     @GetMapping("/admin/blogs")
     public String adminBlogs() {
         return "adminBlog";
     }
+
     @GetMapping("/admin/blog-edit")
     public String adminBlogEdit() {
         return "adminBlogEdit";
@@ -116,6 +112,7 @@ public class PageController {
     public String admin() {
         return "admin";
     }
+
     @PostMapping("/comments/save")
     public String saveFromForm(CommentSaveDTO commentSaveDTO) {
         Comment comment = commentSaveDTO.convertToComment();

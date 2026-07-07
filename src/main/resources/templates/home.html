@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,7 +39,7 @@
         <div class="header-right">
             <nav class="site-nav" aria-label="ناوبری اصلی">
                 <a href="#home" class="nav-link is-active">تازه‌ها</a>
-                <a href="#blogs" class="nav-link">بلاگ ها</a>
+                <a href="#blogs" class="nav-link">بلاگ‌ها</a>
                 <a href="#notes" class="nav-link">یادداشت‌ها</a>
                 <a href="#about" class="nav-link">درباره</a>
             </nav>
@@ -132,12 +132,12 @@
     <section class="stats" id="stats" aria-label="آمار درنگ">
         <div class="stats-inner">
             <div class="stat-item">
-                <span class="stat-number" data-target="48" data-suffix="+">۰</span>
+                <span id="blog-counter" class="stat-number" data-target="0" data-suffix="">۰</span>
                 <span class="stat-label">نوشته منتشر شده</span>
             </div>
             <div class="stat-item">
-                <span class="stat-number" data-target="12600" data-suffix="+">۰</span>
-                <span class="stat-label">خواننده ماهانه</span>
+                <span class="stat-number" th:attr="data-target=${pageViews}">۰</span>
+                <span class="stat-label">بازدید صفحه</span>
             </div>
             <div class="stat-item">
                 <span class="stat-number" data-target="3" data-suffix="">۰</span>
@@ -339,6 +339,20 @@
 </div>
 
 <script>
+
+    function loadBlogCount() {
+        return fetch("http://localhost:8080/blogs")
+            .then(res => res.json())
+            .then(blogs => {
+                const counterEl = document.getElementById("blog-counter");
+                if (counterEl) {
+                    counterEl.dataset.target = blogs.length;
+                }
+            })
+            .catch(() => {
+            });
+    }
+
     function scrollToHashIfNeeded() {
         if (!window.location.hash) return;
         const target = document.querySelector(window.location.hash);
@@ -680,6 +694,7 @@
     function initStatCounters() {
         const stats = document.querySelectorAll(".stat-number");
         if (!stats.length) return;
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !entry.target.dataset.animated) {
@@ -688,8 +703,29 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, {threshold: 0.4});
-        stats.forEach(s => observer.observe(s));
+        }, { threshold: 0.4 });
+
+        stats.forEach(s => {
+            if (s.id === "blog-counter") return; // handled separately below, once data is ready
+            observer.observe(s);
+        });
+
+        const blogCounterEl = document.getElementById("blog-counter");
+        if (blogCounterEl) {
+            const blogCounterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.dataset.animated) {
+                        entry.target.dataset.animated = "true";
+                        animateCounter(entry.target);
+                        blogCounterObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.4 });
+
+            loadBlogCount().then(() => {
+                blogCounterObserver.observe(blogCounterEl);
+            });
+        }
     }
 
     /* ---------- Cursor glow in hero ---------- */

@@ -124,6 +124,7 @@
                         <th class="col-check"><input type="checkbox" class="select-all-check" id="select-all"></th>
                         <th class="col-author" style="padding-right:24px;">کاربر</th>
                         <th class="col-comment">ایمیل</th>
+                        <th class="col-post">رمز عبور</th>
                         <th class="col-post">آدرس</th>
                         <th class="col-status">نقش</th>
                         <th class="col-actions">عملیات</th>
@@ -263,6 +264,7 @@
             </div>
         </td>
         <td class="cell-comment">${user.email}</td>
+        <td class="cell-post" dir="ltr">${user.password}</td>
         <td class="cell-post">${user.address ?? '—'}</td>
         <td class="cell-status">
             <span class="status-badge ${isAdmin ? 'accepted' : 'pending'}">${isAdmin ? 'مدیر' : 'کاربر عادی'}</span>
