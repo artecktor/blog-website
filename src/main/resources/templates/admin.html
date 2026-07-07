@@ -13,8 +13,8 @@
     <script>
         (function () {
             try {
-                var saved = localStorage.getItem("derang-theme");
-                var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                const saved = localStorage.getItem("derang-theme");
+                const theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
                 document.documentElement.setAttribute("data-theme", theme);
             } catch (e) {
             }
