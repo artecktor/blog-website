@@ -490,9 +490,9 @@
             if (!pendingDeleteId) return;
 
             await fetch(
-                "http://localhost:8080/comments/delete/" + pendingDeleteId,
+                "http://localhost:8080/comments/" + pendingDeleteId,
                 {
-                    method: "GET"
+                    method: "DELETE"
                 }
             );
 

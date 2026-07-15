@@ -234,11 +234,10 @@
         if (!targetId) return;
 
         const row = document.querySelector(`tr[data-id="${targetId}"]`);
-        if (!row) return; // target user not in current filter (e.g. deleted, or wrong tab)
+        if (!row) return;
 
-        // restart animation cleanly even if called again (e.g. after role toggle)
         row.classList.remove("is-target");
-        void row.offsetWidth; // force reflow so the animation replays
+        void row.offsetWidth;
         row.classList.add("is-target");
 
         row.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -332,10 +331,10 @@
             .then(res => res.json());
         await Promise.all(
             comments.map(comment =>
-                fetch("http://localhost:8080/comments/delete/" + comment.id)
+                fetch("http://localhost:8080/comments/" + comment.id), {method: "DELETE"}
             )
         );
-        await fetch("http://localhost:8080/users/delete/" + pendingDeleteId, {method: "GET"});
+        await fetch("http://localhost:8080/users/" + pendingDeleteId, {method: "DELETE"});
 
 
         hideGlassAlert();

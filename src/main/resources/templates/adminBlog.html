@@ -264,10 +264,10 @@
             .then(res => res.json());
         await Promise.all(
             comments.map(comment =>
-                fetch("http://localhost:8080/comments/delete/" + comment.id)
+                fetch("http://localhost:8080/comments/" + comment.id), {method: "DELETE"}
             )
         );
-        await fetch("http://localhost:8080/blogs/delete/" + pendingDeleteId, {method: "GET"});
+        await fetch("http://localhost:8080/blogs/" + pendingDeleteId, {method: "DELETE"});
         hideGlassAlert();
         await loadBlogs();
     });

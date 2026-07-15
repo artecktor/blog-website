@@ -22,7 +22,7 @@ public class BlogController {
         blogService.update(blog);
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteBlog(@PathVariable int id) {
         Blog blog = blogService.findById(id);
         blogService.delete(blog);

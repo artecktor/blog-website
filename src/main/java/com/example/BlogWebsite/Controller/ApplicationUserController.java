@@ -15,7 +15,7 @@ public class ApplicationUserController {
         this.applicationUserService = applicationUserService;
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable int id) {
         ApplicationUser applicationUser = applicationUserService.findById(id);
         applicationUserService.delete(applicationUser);
